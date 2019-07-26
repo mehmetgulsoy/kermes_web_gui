@@ -8,7 +8,7 @@ const NotFoundPage = () => {
   return (
     <Container textAlign='center'>
       <h4>
-        404 Sayfa Bulunamadı
+        404 Sayfa Bulunamadı.
       </h4>
       <Link to="/"> Anasayfaya </Link>
     </Container>
