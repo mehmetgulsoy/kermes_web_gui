@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch,  } from "react-router-dom"; 
 import HomePage from "./components/HomePage";
 import Register from "./components/Register";
 import LoginForm from "./components/LoginForm";
@@ -13,8 +13,8 @@ function App() {
         <Route exact path="/" component={HomePage} />
         <Route path="/kayit" component={Register} />
         <Route path="/giris" component={LoginForm} />
-        <Route path="/musteri" component={CustomerPage} />
-        <Route component={NotFoundPage} />
+        <Route path="/musteri" component={CustomerPage} />    
+        <Route component={NotFoundPage} />         
       </Switch>
     </div>
   );
