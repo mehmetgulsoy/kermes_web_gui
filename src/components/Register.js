@@ -18,10 +18,10 @@ class Regisger extends Component {
     telefon: '',
     unvan: '',
     errorMessages: [],
-    successMessages: []
+    successMessages: [],
   }
 
-  handleChangeUpper = (e, { name, value }) => this.setState({ [name]: value.toUpperCase() });
+  handleChangeLower = (e, { name, value }) => this.setState({ [name]: value.toLowerCase() });
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   handleSubmit = () => {
@@ -88,10 +88,10 @@ class Regisger extends Component {
             list={successMessages || []}
           />
           <Form.Input label='Ad Soyadınız' required placeholder='Adınız' type='text' name='adi' value={adi} onChange={this.handleChange} />
-          <Form.Input label='Firma' required type='type' name='firma' value={firma} onChange={this.handleChangeUpper} />
-          <Form.Input label='Firma Unvanı' type='type' name='unvan' value={unvan} onChange={this.handleChangeUpper} />
+          <Form.Input label='Firma' required type='type' name='firma' value={firma} onChange={this.handleChangeLower} />
+          <Form.Input label='Firma Unvanı' type='type' name='unvan' value={unvan} onChange={this.handleChange} />
           <Form.Input label='E-posta' required placeholder='E-posta' type='email' name='eposta' value={eposta} onChange={this.handleChange} />
-          <Form.Input label='Telefon' type='tel' name='telefon' value={telefon} onChange={this.handleChangeUpper} />
+          <Form.Input label='Telefon' type='tel' name='telefon' value={telefon} onChange={this.handleChange} />
           <Form.Input label='Şifre' required type='password' name='sifre' value={sifre} onChange={this.handleChange} error={sifre_error} />
           <Form.Input label='Tekrar Şifre' required type='password' name='sifre2' value={sifre2} onChange={this.handleChange} error={sifre_error} />
           <Button primary loading={isLoading} >Hesabımı Oluştur</Button>
