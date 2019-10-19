@@ -2,71 +2,66 @@ import { push, replace } from 'connected-react-router';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route } from "react-router-dom";
+import ItemForm from "./ItemForm";
 import { Divider, Icon, Menu, Segment } from "semantic-ui-react";
 
 
 const Anasayfa = () => <h2>Home</h2>;
-const Siparis = () => <h2>Sipariş</h2>;
+const Anket = () => <h2>Sipariş</h2>;
 const Yorumlar = () => <h2>Yorumlar</h2>;
 
-class CustomerPage extends Component {
+
+
+class AdminPAge extends Component {
   state = { activeItem: 'Anasayfa' }
 
   routes = [
     {
       path: this.props.match.path + '/Anasayfa',
-      exact: true,  
-      component: Anasayfa, 
+      exact: true,
+      component: Anasayfa,
     },
     {
-      path: this.props.match.path +'/Siparis',
-      component: Siparis,
+      path: this.props.match.path + '/Siparis',
+      component: Anket,
     },
     {
-      path: this.props.match.path +'/Yorumlar',
+      path: this.props.match.path + '/Yorumlar',
       component: Yorumlar,
+    },
+    {
+      path: this.props.match.path + '/menu',
+      component: ItemForm,
     }
   ];
 
   handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
-    this.props.push(this.props.match.path + '/' + name)  
+    this.setState({ activeItem: name }); 
+    this.props.push(`${this.props.match.path}/${name}`)
   }
 
-  render(){    
+  render() {
     const { activeItem } = this.state
-    return(
+    
+    return (
       <div>
-        <Divider hidden/>
-        <Segment vertical>
-         
+        <Divider hidden />       
           {this.routes.map((route, index) => (
-              <Route
-                key={index}
-                path={route.path}
-                exact={route.exact}
-                component={route.component}
-              />
-          ))} 
-          
-        </Segment> 
+            <Route
+              key={index}
+              path={route.path}
+              exact={route.exact}
+              component={route.component}
+            />
+          ))}      
         <Segment vertical>
           <Menu icon='labeled' fixed='bottom' size='mini' fluid>
-            <Menu.Item 
-              name='Anasayfa' 
-              active={activeItem === 'Anasayfa'} 
+            <Menu.Item
+              name='anasayfa'
+              active={activeItem === 'anasayfa'}
               onClick={this.handleItemClick}>
               <Icon name='home' />
               Anasayfa
-            </Menu.Item>
-
-            <Menu.Item
-              name='Siparis'
-              active={activeItem === 'Siparis'}
-              onClick={this.handleItemClick}
-            >
-              <Icon name='cart' />
-              Sipariş
             </Menu.Item>
 
             <Menu.Item
@@ -76,7 +71,7 @@ class CustomerPage extends Component {
             >
               <Icon name='comments' />
               Yorumlar
-            </Menu.Item>            
+            </Menu.Item>
             <Menu.Item
               name='chat'
               active={activeItem === 'chat'}
@@ -87,27 +82,27 @@ class CustomerPage extends Component {
             </Menu.Item>
 
             <Menu.Item
-              name='food'
-              active={activeItem === 'food'}
+              name='menu'
+              active={activeItem === 'menu'}
               onClick={this.handleItemClick}
             >
               <Icon name='food' />
-              Menu
+              Menü Güncelle
             </Menu.Item>
           </Menu>
-        </Segment> 
+        </Segment>
       </div>
     )
   }
 }
 
-const mapStateToProps=state=> ({
+const mapStateToProps = state => ({
 
 });
-  
-const mapDispatchToProps=dispatch=> ({
+
+const mapDispatchToProps = dispatch => ({
   push: (path) => dispatch(push(path)),
-  replace: (path) =>dispatch(replace(path))
+  replace: (path) => dispatch(replace(path))
 });
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(CustomerPage);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminPAge);

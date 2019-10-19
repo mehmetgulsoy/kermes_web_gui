@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message, Icon, Container, Grid } from 'semantic-ui-react';
+import { Grid, Icon, Message } from 'semantic-ui-react';
 
 
 const HomePage = () => {
