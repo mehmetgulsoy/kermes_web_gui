@@ -1,32 +1,44 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Form, Grid, Header, Image, Message, Segment, } from 'semantic-ui-react';
-import * as actions from "../actions/item"
-import * as sockets from "../actions/socket"
-import * as auth from "../actions/auth"
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
+import { connect } from 'react-redux';import { Button, Form, Grid, Header, Image, Message, Segment, } from 'semantic-ui-react';
+import * as actions from "../actions/item"
+import * as auth from "../actions/auth"
+import * as msg from '../constants/msg'
 
 class LoginForm extends Component {
-
   state = {
-    uye : '',
+    uye: '',
     sifre: '',
-    errorMessages: [],
-    successMessages: [],
+    formErrors: {}
   }
 
-  handleChange = (e, { name, value}) => this.setState({[name]: value});
-  handleSubmit = () => {
-    console.log("tık");    
+  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleSubmit = () => {      
     const { uye, sifre } = this.state
-    //this.props.auth.logOut()
-    this.props.auth.login({uye, sifre }).then(console.log("bitti"));
+    let errors = {}; 
+    
+    if (!uye) 
+      errors.uye = msg.REQUIRED_FIELD_MSG; 
+    else if (!uye.includes('@'))
+      errors.uye = msg.UYE_FIELD_MSG
+    
+    if (!sifre) 
+      errors.sifre = msg.REQUIRED_FIELD_MSG;
+
+    this.setState({formErrors: errors});
+    
+    if (Object.entries(errors).length !== 0){
+      console.log('hata: ',errors);      
+      return;
+    }          
+    this.props.auth.login({ uye, sifre })
+    .then(this.props.push('/'));
   }
 
   render() {
+    const  {formErrors} = this.state;
     return (
       <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
         <Grid.Column style={{ maxWidth: 450 }}>
@@ -35,13 +47,20 @@ class LoginForm extends Component {
           </Header>
           <Form size='large' onSubmit={this.handleSubmit} >
             <Segment stacked>
-              <Form.Input 
+              <Message
+                error={true}
+                header='Hata Oluştu!'
+                //list={errorMessages || []}
+              />
+              <Form.Input
                 fluid
-                required 
-                icon='user' 
-                iconPosition='left' 
+                required
+                icon='user'
+                iconPosition='left'
                 placeholder='uye@firma'
+                pointing='right'
                 name='uye'
+                error = {formErrors.uye}
                 onChange={this.handleChange}
               />
               <Form.Input
@@ -52,6 +71,7 @@ class LoginForm extends Component {
                 placeholder='Şifre'
                 type='password'
                 name='sifre'
+                error = {formErrors.sifre}
                 onChange={this.handleChange}
               />
               <Button primary fluid size='large'>
@@ -71,12 +91,12 @@ class LoginForm extends Component {
 
 const mapStateToProps = state => ({
   responce: state.responce,
+  //isFetching : get
 });
 
 const mapDispatchToProps = dispatch => ({
   push: (path) => dispatch(push(path)),
-  actions: bindActionCreators(actions, dispatch),
-  sockets: bindActionCreators(sockets, dispatch),
+  actions: bindActionCreators(actions, dispatch), 
   auth: bindActionCreators(auth, dispatch),
 });
 
