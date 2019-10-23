@@ -1,4 +1,4 @@
-import { NETWORK_REQUEST_BEGIN, NETWORK_REQUEST_END } from "../reducers/responce";
+import * as types from "../constants/actionTypes";
 
 export const connect = () => (dispatch, getState,{ axios, socket }) => {  
   socket.on('connect_info', (data) => {
@@ -16,8 +16,8 @@ export const disconnect = () => (dispatch, getState,{ axios, socket }) => {
   });
 }
 
-const uye_kayit_Begin = ()       => ({ type: NETWORK_REQUEST_BEGIN});
-const uye_kayit_end   = (res)   => ({ type: NETWORK_REQUEST_END, error: res.error, msg : res.msg });
+const uye_kayit_Begin = ()       => ({ type: types.NETWORK_REQUEST_BEGIN});
+const uye_kayit_end   = (res)   => ({ type: types.NETWORK_REQUEST_END, error: res.error, msg : res.msg });
 
 export const uye_kayit = (data) => (dispatch, getState,{ axios, socket }) => {  
   dispatch(uye_kayit_Begin());

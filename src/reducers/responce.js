@@ -1,22 +1,23 @@
-export const NETWORK_REQUEST_BEGIN   = 'NETWORK_REQUEST_BEGIN';
-export const NETWORK_REQUEST_END   = 'NETWORK_REQUEST_END'; 
+import * as types from "../constants/actionTypes";
 
 export default (state = {isLoading: false, msg: '', error: false, meta:{}}, action) => {
 	switch (action.type) {
-    case  NETWORK_REQUEST_BEGIN:
+    case  types.NETWORK_REQUEST_BEGIN:
       return{        
         isLoading: true,
         error: false,
-        msg:'',  
+        msg:'',
+        last_at : new Date(),  
         meta: {          
           begin_at: new Date()
         }   
       }
-		case NETWORK_REQUEST_END:
+		case types.NETWORK_REQUEST_END:
 			return {               
         isLoading: false,
         error: action.error || false,
         msg: action.msg || '',
+        last_at : new Date(),
         meta: {            
           sure: new Date() - state.meta.begin_at   || 0,
         } 
@@ -24,4 +25,12 @@ export default (state = {isLoading: false, msg: '', error: false, meta:{}}, acti
 		default:
 			return state;
 	}		   
+}
+
+export function getResponce(state) {
+  return state;
+}
+
+export function getIsFetching(state) {
+  return state.isLoading && new Date() - state.last_at < 5000;
 }

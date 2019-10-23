@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Form, Grid, Header, Image, Message, Segment, } from 'semantic-ui-react';
 import * as actions from "../actions/item"
 import * as sockets from "../actions/socket"
+import * as auth from "../actions/auth"
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -19,7 +20,10 @@ class LoginForm extends Component {
 
   handleChange = (e, { name, value}) => this.setState({[name]: value});
   handleSubmit = () => {
-    return
+    console.log("tık");    
+    const { uye, sifre } = this.state
+    //this.props.auth.logOut()
+    this.props.auth.login({uye, sifre }).then(console.log("bitti"));
   }
 
   render() {
@@ -73,6 +77,7 @@ const mapDispatchToProps = dispatch => ({
   push: (path) => dispatch(push(path)),
   actions: bindActionCreators(actions, dispatch),
   sockets: bindActionCreators(sockets, dispatch),
+  auth: bindActionCreators(auth, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
