@@ -29,7 +29,7 @@ export const login = (data) => (dispatch, getState, { axios, socket }) => {
     respons => {
       dispatch({
         type: types.NETWORK_REQUEST_END,
-        error: respons.data.error || false,
+        error: respons.data.error,
         msg: respons.data.msg || ''
       });
       dispatch(UserAuthSuccses(respons));
@@ -45,7 +45,6 @@ export const login = (data) => (dispatch, getState, { axios, socket }) => {
     }
   );
 };
-
 
 export const logOut = () => (dispatch, getState, { axios, socket }) => {
   if (getIsFetching(getState().responce)) {

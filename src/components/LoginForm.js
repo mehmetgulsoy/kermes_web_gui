@@ -6,6 +6,7 @@ import { connect } from 'react-redux';import { Button, Form, Grid, Header, Image
 import * as actions from "../actions/item"
 import * as auth from "../actions/auth"
 import * as msg from '../constants/msg'
+import { log } from 'util';
 
 class LoginForm extends Component {
   state = {
@@ -34,8 +35,24 @@ class LoginForm extends Component {
       return;
     }          
     this.props.auth.login({ uye, sifre })
+    .then(res => console.log(res))
     .then(this.props.push('/'));
   }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { isLoading, error, msg } = this.props.responce;
+    const { successMessages, errorMessages, } = this.state;
+
+    if (isLoading === false && prevProps.responce.isLoading === true && ) {
+      this.props.push('/')
+      if (error) {
+        this.setState({ errorMessages: [...errorMessages, msg]});
+      }
+      else
+        this.setState({ successMessages: [...successMessages, msg]});       
+    }
+  }
+
 
   render() {
     const  {formErrors} = this.state;
@@ -91,6 +108,7 @@ class LoginForm extends Component {
 
 const mapStateToProps = state => ({
   responce: state.responce,
+  auth : state.auth,
   //isFetching : get
 });
 
