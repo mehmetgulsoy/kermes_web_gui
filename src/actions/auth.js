@@ -1,10 +1,11 @@
 import { getIsFetching } from "../reducers/responce";
 import * as types from "../constants/actionTypes";
-import * as URL from "../constants/URLs";
+import * as MSG from "../constants/msg";
+
 
 const UserAuthSuccses = (respons) => ({
     type: types.USER_AUTH,
-    isAuthenticated: !respons.data.error,
+    isAuthenticated: true,
     userName: respons.data.data.uye,
 })
 
@@ -21,25 +22,25 @@ export const login = (data) => (dispatch, getState, { axios, socket }) => {
   dispatch({
     type: types.NETWORK_REQUEST_BEGIN,
   });
-  return axios.post(`${URL.apiUrl}/login`, data, { headers: { "Access-Control-Allow-Origin": "*" } }).then(
-    respons => {
-      dispatch(UserAuthFail);
-      dispatch({
-        type: types.NETWORK_REQUEST_END,
-        error: respons.data.error,
-        msg: respons.data.msg || ''
-      });
-      dispatch(UserAuthSuccses(respons));
-      return respons;
-    },
-    error => {
-      dispatch({
-        type: types.NETWORK_REQUEST_END,
-        error: error.error || true,
-        msg: error.msg || 'Hata oluştu'
-      });
-      dispatch(UserAuthFail);
-    }
+  return axios.post('/login', data)
+    .then(dispatch(UserAuthFail()))
+    .then(
+      respons => {       
+        dispatch({
+          type: types.NETWORK_REQUEST_END,
+          error: false,
+          msg: (respons.data && respons.data.msg) || MSG.SUCCESS_MSG
+        });
+        dispatch(UserAuthSuccses(respons));         
+      },
+      error => {
+        dispatch({
+          type: types.NETWORK_REQUEST_END,
+          error: true,
+          msg: (error.response && error.response.data.msg) || MSG.FAIL_MSG
+        });
+        dispatch(UserAuthFail());        
+      }
   );
 };
 
@@ -50,20 +51,20 @@ export const logOut = () => (dispatch, getState, { axios, socket }) => {
   dispatch({
     type: types.NETWORK_REQUEST_BEGIN,
   });
-  return axios.get(`${URL.apiUrl}/logout`, { headers: { "Access-Control-Allow-Origin": "*" } }).then(
+  return axios.get('/logout').then(
     respons => {
       dispatch({
         type: types.NETWORK_REQUEST_END,
-        error: respons.data.error || false,
-        msg: respons.data.msg || ''
+        error: false,
+        msg: MSG.SUCCESS_MSG
       });
       dispatch(dispatch(UserAuthFail));
     },
     error => {
       dispatch({
         type: types.NETWORK_REQUEST_END,
-        error: error.data.error || true,
-        msg: error.data.msg || 'Hata oluştu'
+        error: true,
+        msg: MSG.FAIL_MSG
       });
       dispatch(dispatch(UserAuthFail));
     }

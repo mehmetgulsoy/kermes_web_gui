@@ -5,7 +5,7 @@ export default (state = {isAuthenticated: false, userName: '' }, action) => {
     case types.USER_AUTH:
       return{         
         isAuthenticated: action.isAuthenticated,
-        userName: action.userName, 
+        userName: action.userName,
       }
 		default:
 			return state;
