@@ -18,7 +18,7 @@ function App() {
         <Route path="/giris" component={LoginForm} />
         <Route path="/musteri" component={CustomerPage} />  
         <Route path="/admin" component={AdminPage} />  
-        <Route path="/Item" component={ItemForm} /> 
+        <Route path="/menu" component={ItemForm} /> 
         <Route path="/modal" component={MeetingFormModal} /> 
         <Route component={NotFoundPage} />         
       </Switch>

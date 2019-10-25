@@ -19,7 +19,16 @@ const options = [
 ];
 
 class ItemForm extends Component {
-  state = { adi: '', takip: false, aciklama: '', eldeki: 0, options, taksim: '', error_message: '', fiyat: 0, }
+  state = {
+    adi: '',
+    takip: false,
+    aciklama: '',
+    eldeki: 0,
+    options,
+    taksim: '',
+    formErrors: {},
+    fiyat: 0,
+  }
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value.toUpperCase() });
   handleAddition = (e, { value }) => {
@@ -31,7 +40,7 @@ class ItemForm extends Component {
   toggle = (e, { name, checked }) => this.setState({ [name]: checked });
 
   handleSubmit = () => {
-    const { adi, aciklama, takip, eldeki, taksim, fiyat } = this.state;    
+    const { adi, aciklama, takip, eldeki, taksim, fiyat } = this.state;
     this.props.actions.saveItem({
       adi,
       aciklama,
@@ -40,11 +49,11 @@ class ItemForm extends Component {
       taksim,
       fiyat
     });
-    this.props.sockets.disconnect();
+   
   };
 
   componentDidMount(prevProps, prevState, snapshot) {
-    this.props.sockets.connect();
+   
   }
 
   render() {
@@ -60,6 +69,14 @@ class ItemForm extends Component {
         />
         <Segment attached>
           <Form onSubmit={this.handleSubmit}>
+            <Message
+              error
+              hidden={error_message === ''}
+              attached
+              icon='warning'
+              header='Hata Oluştu'
+              content='Hata oluştu'
+            />
             <Form.Input
               required
               placeholder='Adi'
@@ -120,20 +137,12 @@ class ItemForm extends Component {
               label='Stok Miktari'
               onChange={this.handleChange}
               disabled={!takip}
-            />   
-            <Button type='submit' disabled={adi === '' || taksim === ''} loading={isLoading} > 
+            />
+            <Button type='submit' disabled={adi === '' || taksim === ''} loading={isLoading} >
               <span role='img' aria-label="xzxz" >👍</span> Kaydet
             </Button>
           </Form>
         </Segment>
-        <Message
-          error
-          hidden={error_message === ''}
-          attached
-          icon='warning'
-          header='Hata Oluştu'
-          content={error_message}
-        />
       </Container>
     );
   };

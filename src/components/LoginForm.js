@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Button, Form, Grid, Header, Image, Message, Segment, } from 'semantic-ui-react';
-import * as actions from "../actions/item"
+import { Button, Form, Grid, Header, Image, Message, Segment, } from 'semantic-ui-react'; 
 import * as auth from "../actions/auth"
 import * as msg from '../constants/msg'
 import * as auth_reducers from "../reducers/auth";
+import * as res_reducers from "../reducers/responce";
 
 class LoginForm extends Component {
   state = {
@@ -35,34 +35,30 @@ class LoginForm extends Component {
       console.log('hata: ',errors);      
       return;
     }          
-    this.props.auth.login({ uye, sifre })
-    .then(res => console.log(res))
-    
+    this.props.auth.login({ uye, sifre })       
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { isLoading, error, msg ,isAuthenticated } = this.props.responce;
-    const { successMessages, errorMessages, } = this.state;
-
     if (this.props.isAuthenticated === true && prevProps.isAuthenticated === false) {
       this.props.push('/')         
     }
   }
 
-
   render() {
     const  {formErrors} = this.state;
+    const  {res_error, res_msg } = this.props;
     return (
       <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as='h2' color='teal' textAlign='center'>
-            <Image src='/favicon.ico' /> Üye Girişi
+            <Image src='/favicon.ico'/> Üye Girişi
           </Header>
-          <Form size='large' onSubmit={this.handleSubmit} >
+          <Form error={res_error} size='large' onSubmit={this.handleSubmit} >
             <Segment stacked>
               <Message
-                error={true}
+                error
                 header='Hata Oluştu!'
+                content={res_msg}
                 //list={errorMessages || []}
               />
               <Form.Input
@@ -103,15 +99,15 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  responce: state.responce,
-  auth : state.auth,
   isAuthenticated : auth_reducers.getisAuthenticated(state.auth),
   userName : auth_reducers.getUserName(state.auth),
+  res_error : res_reducers.getError(state.responce),
+  res_msg : res_reducers.getMsg(state.responce),
 });
 
 const mapDispatchToProps = dispatch => ({
   push: (path) => dispatch(push(path)),
-  actions: bindActionCreators(actions, dispatch), 
+  //actions: bindActionCreators(actions, dispatch), 
   auth: bindActionCreators(auth, dispatch),
 });
 

@@ -6,10 +6,7 @@ import axios from 'axios';
 // 'routerMiddleware': the new way of storing route changes with redux middleware since rrV4.
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from './reducers';
-
-
-export const history = createBrowserHistory();
-const socket = io('http://localhost:5000/');
+import { apiUrl } from "./constants/URLs";
 
 // eslint-disable-next-line 
 const checkNetworkConnection = store => next => action => {
@@ -21,6 +18,12 @@ const checkNetworkConnection = store => next => action => {
     next(action)
   }
 }
+
+export const history = createBrowserHistory();
+const socket = io(apiUrl);
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = apiUrl;
 
 function configureStore(initialState) {
   const reactRouterMiddleware = routerMiddleware(history);

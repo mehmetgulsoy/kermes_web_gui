@@ -5,7 +5,8 @@ export default (state = {isAuthenticated: false, userName: '' }, action) => {
     case types.USER_AUTH:
       return{         
         isAuthenticated: action.isAuthenticated,
-        userName: action.userName, 
+        userName: action.userName,
+        firma: '',
       }
 		default:
 			return state;
@@ -14,3 +15,4 @@ export default (state = {isAuthenticated: false, userName: '' }, action) => {
 
 export const getisAuthenticated = (state) => state.isAuthenticated;
 export const getUserName = (state) => state.getUserName;
+export const getFirma = (state) => state.firma;
