@@ -30,9 +30,8 @@ class ItemForm extends Component {
     fiyat: 0,
   }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value.toUpperCase() });
+  handleChange = (e, { name, value }) => this.setState({ [name]: value });
   handleAddition = (e, { value }) => {
-    value = value.toUpperCase();
     this.setState(prevState => ({
       options: [{ key: value, text: value, value }, ...prevState.options],
     }));
@@ -49,11 +48,15 @@ class ItemForm extends Component {
       taksim,
       fiyat
     });
-   
+
   };
 
   componentDidMount(prevProps, prevState, snapshot) {
-   
+
+
+
+
+
   }
 
   render() {

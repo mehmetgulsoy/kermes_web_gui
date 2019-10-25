@@ -1,12 +1,13 @@
+import { push } from 'connected-react-router'
 import { getIsFetching } from "../reducers/responce";
 import * as types from "../constants/actionTypes";
 import * as MSG from "../constants/msg";
 
 
 const UserAuthSuccses = (respons) => ({
-  type: types.USER_AUTH,
-  isAuthenticated: true,
-  userName: respons.data.data.uye,
+    type: types.USER_AUTH,
+    isAuthenticated: true,
+    userName: respons.data.data.uye,
 })
 
 const UserAuthFail = () => ({
@@ -31,7 +32,8 @@ export const login = (data) => (dispatch, getState, { axios, socket }) => {
           error: false,
           msg: (respons.data && respons.data.msg) || MSG.SUCCESS_MSG
         });
-        dispatch(UserAuthSuccses(respons));         
+        dispatch(UserAuthSuccses(respons));
+        dispatch(push('/'));         
       },
       error => {
         dispatch({

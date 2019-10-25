@@ -6,7 +6,7 @@ const HomePage = () => {
   return (
     <Grid
       textAlign='center'
-      style={{ height: '100vh' }} 
+      style={{ height: '100vh' }}
       verticalAlign='middle'
     >
       <Grid.Column style={{ maxWidth: 450 }}>
