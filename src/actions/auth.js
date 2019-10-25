@@ -4,9 +4,9 @@ import * as MSG from "../constants/msg";
 
 
 const UserAuthSuccses = (respons) => ({
-  type: types.USER_AUTH,
-  isAuthenticated: true,
-  userName: respons.data.data.uye,
+    type: types.USER_AUTH,
+    isAuthenticated: true,
+    userName: respons.data.data.uye,
 })
 
 const UserAuthFail = () => ({
