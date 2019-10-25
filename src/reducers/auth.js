@@ -11,3 +11,6 @@ export default (state = {isAuthenticated: false, userName: '' }, action) => {
 			return state;
 	}		   
 }
+
+export const getisAuthenticated = (state) => state.isAuthenticated;
+export const getUserName = (state) => state.getUserName;

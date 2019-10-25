@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';import { Button, Form, Grid, Header, Image, Message, Segment, } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { Button, Form, Grid, Header, Image, Message, Segment, } from 'semantic-ui-react';
 import * as actions from "../actions/item"
 import * as auth from "../actions/auth"
 import * as msg from '../constants/msg'
-import { log } from 'util';
+import * as auth_reducers from "../reducers/auth";
 
 class LoginForm extends Component {
   state = {
@@ -36,20 +37,15 @@ class LoginForm extends Component {
     }          
     this.props.auth.login({ uye, sifre })
     .then(res => console.log(res))
-    .then(this.props.push('/'));
+    
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { isLoading, error, msg } = this.props.responce;
+    const { isLoading, error, msg ,isAuthenticated } = this.props.responce;
     const { successMessages, errorMessages, } = this.state;
 
-    if (isLoading === false && prevProps.responce.isLoading === true && ) {
-      this.props.push('/')
-      if (error) {
-        this.setState({ errorMessages: [...errorMessages, msg]});
-      }
-      else
-        this.setState({ successMessages: [...successMessages, msg]});       
+    if (this.props.isAuthenticated === true && prevProps.isAuthenticated === false) {
+      this.props.push('/')         
     }
   }
 
@@ -109,7 +105,8 @@ class LoginForm extends Component {
 const mapStateToProps = state => ({
   responce: state.responce,
   auth : state.auth,
-  //isFetching : get
+  isAuthenticated : auth_reducers.getisAuthenticated(state.auth),
+  userName : auth_reducers.getUserName(state.auth),
 });
 
 const mapDispatchToProps = dispatch => ({

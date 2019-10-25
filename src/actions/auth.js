@@ -2,21 +2,17 @@ import { getIsFetching } from "../reducers/responce";
 import * as types from "../constants/actionTypes";
 import * as URL from "../constants/URLs";
 
-const UserAuthSuccses = (respons) => (
-  {
+const UserAuthSuccses = (respons) => ({
     type: types.USER_AUTH,
     isAuthenticated: !respons.data.error,
-    userName: respons.data.uye,
-  }
-)
+    userName: respons.data.data.uye,
+})
 
-const UserAuthFail = () => (
-  {
+const UserAuthFail = () => ({
     type: types.USER_AUTH,
     isAuthenticated: false,
     userName: '',
-  }
-)
+})
 
 export const login = (data) => (dispatch, getState, { axios, socket }) => {
   if (getIsFetching(getState().responce)) {
@@ -27,6 +23,7 @@ export const login = (data) => (dispatch, getState, { axios, socket }) => {
   });
   return axios.post(`${URL.apiUrl}/login`, data, { headers: { "Access-Control-Allow-Origin": "*" } }).then(
     respons => {
+      dispatch(UserAuthFail);
       dispatch({
         type: types.NETWORK_REQUEST_END,
         error: respons.data.error,
