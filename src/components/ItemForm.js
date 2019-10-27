@@ -18,6 +18,8 @@ const options = [
   { key: 'İÇECEKLER', text: 'İÇECEKLER', value: 'İÇECEKLER' },
 ];
 
+
+
 class ItemForm extends Component {
   state = {
     adi: '',
@@ -48,14 +50,9 @@ class ItemForm extends Component {
       taksim,
       fiyat
     });
-
   };
 
   componentDidMount(prevProps, prevState, snapshot) {
-
-
-
-
 
   }
 
