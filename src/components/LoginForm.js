@@ -18,7 +18,7 @@ class LoginForm extends Component {
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
   handleSubmit = () => {
-    const { uye, sifre } = this.state
+    const { uye, sifre } = this.state;
     let errors = {};
 
     if (!uye)
