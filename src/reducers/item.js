@@ -1,6 +1,6 @@
 import * as types from '../constants/actionTypes';
 
-export default (state = {isLoading: false, items: {}}, action) => {
+export default (state = { katagori:[] }, action) => {
 	switch (action.type) {
     case types.ITEM_SAVE_BEGIN:
       return{
@@ -21,9 +21,16 @@ export default (state = {isLoading: false, items: {}}, action) => {
         ...state,
         isLoading: false,
         error : action.error   
-      }  
+      }
+    case types.MENU_KATAGORI_BEGIN:
+    case types.MENU_KATAGORI_FAIL:
+      return { ...state, katagori:  []};
+    case types.MENU_KATAGORI_SUCCESS:
+      return  { ...state, katagori:  action.katagori}; 
 		default:
 			return state;
 	}		   
 }
+
+export const getMenuKatagori = (state) => state.katagori; 
 

@@ -29,5 +29,5 @@ export default (state = {isLoading: false, msg: '', error: false, meta:{}}, acti
 
 export const getResponce = (state) => state;
 export const getIsFetching =(state) => state.isLoading && new Date() - state.last_at < 5000; 
-export const getError = (state) => state.error 
-export const getMsg = (state) => state.msg
+export const getError = (state) => state.error; 
+export const getMsg = (state) => state.msg;

@@ -1,17 +1,37 @@
 import * as types from '../constants/actionTypes';
+import { getIsFetching } from "../reducers/responce";
 
-const saveItemBegin    = ()       => ({ type: types.ITEM_SAVE_BEGIN});
-const saveItemSucces   = (item)   => ({ type: types.ITEM_SAVE_SUCCESS, item});
-const saveItemFailure  = (error)  => ({ type: types.ITEM_SAVE_FAILURE, error});
 
-export const saveItem = (item) => (dispatch, getState,axios) => {  
-  dispatch(saveItemBegin());
-  return Promise.resolve()  
-  .then(
-    ()=> dispatch(saveItemSucces(item) ),
-    (error)=> dispatch(saveItemFailure(error))
-  )
+export const fethKatagori = () => (dispatch, getState, {axios}) => {
+  dispatch({ type: types.MENU_KATAGORI_BEGIN});
+  axios.get('/urun_katagori').then(
+    respons => {       
+      dispatch({ type: types.MENU_KATAGORI_SUCCESS, katagori: respons.data.data.katagori.split(',')});
+    },
+    error =>{
+      dispatch({ type: types.MENU_KATAGORI_FAIL}); 
+      console.log('hata: ',error);       
+    }
+  );
 }
+ 
+export const saveMenuItem = (data) => (dispatch, getState, {axios}) => {
+  if (getIsFetching(getState().responce)) {
+    return Promise.resolve();
+  }
+  dispatch({ type: types.ITEM_SAVE_BEGIN});
+  axios.post('/urun_ekle', data).then(
+    respons => { 
+      console.log(respons);       
+      dispatch({ type: types.ITEM_SAVE_SUCCESS});
+    },
+    error =>{
+      dispatch({ type: types.ITEM_SAVE_FAILURE}); 
+      console.log('hata: ',error);       
+    }
+  );
+}
+
 
 /*
 export const fetchTodos = (filter) => (dispatch, getState) => {
