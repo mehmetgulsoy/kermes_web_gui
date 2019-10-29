@@ -5,9 +5,7 @@ import { connect } from 'react-redux';
 import { Button, Container, Divider, Form, Message, Segment } from "semantic-ui-react";
 import * as actions from "../actions/item"
 import * as item_reducers from "../reducers/item";
-import { getIsFetching } from "../reducers/responce";
-
-
+import { getIsFetching, getError, getMsg } from "../reducers/responce";
 
 
 class ItemForm extends Component {
@@ -17,23 +15,25 @@ class ItemForm extends Component {
     aktif: false,
     aciklama: '',
     eldeki: 0,
-    options: [],
     taksim: '',
     formErrors: {},
+    isSubmitted: false,
     fiyat: 0,
   }
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
   handleAddition = (e, { value }) => {
-    this.setState(prevState => ({
-      options: [{ key: value, text: value, value }, ...prevState.options],
-    }));
+    this.props.actions.katagori_ekle(value)
+ //   this.setState(prevState => ({
+ //     options: [{ key: value, text: value, value }, ...prevState.options],
+ //   }));
     console.log(this.state.options);
 
   };
   toggle = (e, { name, checked }) => this.setState({ [name]: checked });
 
   handleSubmit = () => {
+    this.setState({ isSubmitted: true });
     const { adi, aciklama, takip, eldeki, taksim, fiyat, aktif } = this.state;
     this.props.actions.saveMenuItem({
       adi,
@@ -51,9 +51,12 @@ class ItemForm extends Component {
   }
 
   render() {
-    const { adi, aciklama, takip, eldeki, taksim, error_message, fiyat, aktif, } = this.state;
-    const { isLoading, } = this.props;
-
+    const { adi, aciklama, takip, eldeki, taksim, fiyat, aktif, isSubmitted, } = this.state;
+    const { isLoading, msg, error } = this.props;
+    let msgError = isSubmitted && error;
+    let msgSuc = isSubmitted && !error;
+    let isSubmitting = isSubmitted && isLoading;
+    
     return (
       <Container text>
         <Divider hidden />
@@ -63,14 +66,18 @@ class ItemForm extends Component {
           content='Menüye yeni kalem ekleyebilir ve/veya güncelleme yapabilirsiniz!'
         />
         <Segment attached>
-          <Form onSubmit={this.handleSubmit}>
+          <Form error={msgError} success={msgSuc} onSubmit={this.handleSubmit}>
             <Message
               error
-              hidden={error_message === ''}
-              attached
               icon='warning'
-              header='Hata Oluştu'
-              content='Hata oluştu'
+              header='Hata Oluştu!'
+              content={msg}
+            />
+            <Message
+              success
+              icon='thumbs up outline'
+              header='İşlem Başarılı'
+              content={msg}
             />
             <Form.Input
               required
@@ -81,7 +88,7 @@ class ItemForm extends Component {
               onChange={this.handleChange}
             />
             <Form.Dropdown
-              options={this.props.options.map((val, ind) => ({
+              options={this.props.options && this.props.options.map((val, ind) => ({
                 key: ind, text: val, value: val
               }))}
               placeholder='Kategori'
@@ -136,14 +143,14 @@ class ItemForm extends Component {
               disabled={!takip}
             />
             <Form.Checkbox
-              placeholder='Muneden kaldır'
+              placeholder='Menüden kaldır'
               name='aktif'
               checked={aktif}
-              label='Muneden kaldır'
+              label='Menüden kaldır'
               onChange={this.toggle}
             />
 
-            <Button type='submit' disabled={adi === '' || taksim === ''} loading={isLoading} >
+            <Button type='submit' disabled={adi === '' || taksim === ''} loading={isSubmitting} >
               <span role='img' aria-label="xzxz" >👍</span> Kaydet
             </Button>
           </Form>
@@ -156,13 +163,13 @@ class ItemForm extends Component {
 const mapStateToProps = state => ({
   isLoading: getIsFetching(state.responce),
   options: item_reducers.getMenuKatagori(state.item),
-
+  error: getError(state.responce),
+  msg: getMsg(state.responce),
 });
 
 const mapDispatchToProps = dispatch => ({
   push: (path) => dispatch(push(path)),
   actions: bindActionCreators(actions, dispatch),
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ItemForm);

@@ -39,9 +39,8 @@ class Regisger extends Component {
       this.setState({ sifre_error: false })
     }
 
-    if (error) return
-
-
+    if (error) return;
+    
     sockets.uye_kayit({
       adi,
       firma,
