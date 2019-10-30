@@ -2,15 +2,16 @@ import * as types from '../constants/actionTypes';
 import * as MSG from "../constants/msg";
 import { getIsFetching } from "../reducers/responce";
 import { getMenuKatagori } from "../reducers/item";
+ 
 
 export const fethUrun = () => (dispatch, getState, {axios}) => {
-  dispatch({ type: types.MENU_KATAGORI_BEGIN});
-  return axios.get('/urun_katagori').then(
+  dispatch({ type: types.FETCH_URUNLER_BEGIN});
+  return axios.get('/urun').then(
     respons => {       
-      dispatch({ type: types.MENU_KATAGORI_SUCCESS, });
+      dispatch({ type: types.FETCH_URUNLER_SUCCESS, items: respons.data.data });
     },
     error =>{
-      dispatch({ type: types.MENU_KATAGORI_FAIL}); 
+      dispatch({ type: types.FETCH_URUNLER_FAIL}); 
       console.log('hata: ',error);       
     }
   );
@@ -20,7 +21,10 @@ export const fethKatagori = () => (dispatch, getState, {axios}) => {
   dispatch({ type: types.MENU_KATAGORI_BEGIN});
   return axios.get('/urun_katagori').then(
     respons => {       
-      dispatch({ type: types.MENU_KATAGORI_SUCCESS, katagori: respons.data.data.katagori.split(',')});
+      let list = []; 
+      if (respons.data && respons.data.data)
+        list = respons.data.data.katagori.split(',');      
+      dispatch({ type: types.MENU_KATAGORI_SUCCESS, katagori: list});
     },
     error =>{
       dispatch({ type: types.MENU_KATAGORI_FAIL}); 

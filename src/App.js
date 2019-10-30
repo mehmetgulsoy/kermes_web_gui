@@ -8,6 +8,7 @@ import CustomerPage from "./components/CustomerPage";
 import AdminPage from "./components/AdminPage";
 import ItemForm from "./components/ItemForm"; 
 import MeetingFormModal from "./components/Model";
+import ItemList from "./components/ItemList";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/musteri" component={CustomerPage} />  
         <Route path="/admin" component={AdminPage} />  
         <Route path="/menu" component={ItemForm} /> 
+        <Route path="/menu_list" component={ItemList} /> 
         <Route path="/modal" component={MeetingFormModal} /> 
         <Route component={NotFoundPage} />         
       </Switch>

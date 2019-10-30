@@ -12,6 +12,16 @@ export default (state = { katagori:[], items : {} }, action) => {
       };
     case types.MENU_KATAGORI_SUCCESS:
       return  { ...state, katagori:  action.katagori};   
+    
+    case types.FETCH_URUNLER_SUCCESS:
+      let items = {};
+      action.items.map( val => items[val.urun]= val);      
+      return {
+        ...state,
+        items: { ...items}
+      }    
+    case types.FETCH_URUNLER_BEGIN: 
+    case types.FETCH_URUNLER_FAIL:  
     case types.ITEM_SAVE_FAILURE:       
     case types.MENU_KATAGORI_BEGIN:
     case types.MENU_KATAGORI_FAIL:
