@@ -1,35 +1,37 @@
-import { push } from 'connected-react-router';
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Button, Container, Divider, Form, Message, Segment } from "semantic-ui-react";
-import * as actions from "../actions/item"
+import { push } from "connected-react-router";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  Button,
+  Container,
+  Divider,
+  Form,
+  Message,
+  Segment
+} from "semantic-ui-react";
+import * as actions from "../actions/item";
 import * as item_reducers from "../reducers/item";
-import { getIsFetching, getError, getMsg } from "../reducers/responce";
-
+import { getError, getIsFetching, getMsg } from "../reducers/responce";
 
 class ItemForm extends Component {
   state = {
-    adi: '',
+    adi: "",
     takip: false,
     aktif: false,
-    aciklama: '',
+    aciklama: "",
     eldeki: 0,
-    taksim: '',
+    taksim: "",
     formErrors: {},
     isSubmitted: false,
-    fiyat: 0,
-  }
+    fiyat: 0
+  };
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
   handleAddition = (e, { value }) => {
-    this.props.actions.katagori_ekle(value)
- //   this.setState(prevState => ({
- //     options: [{ key: value, text: value, value }, ...prevState.options],
- //   }));
-    console.log(this.state.options);
-
+    this.props.actions.katagori_ekle(value);
   };
+
   toggle = (e, { name, checked }) => this.setState({ [name]: checked });
 
   handleSubmit = () => {
@@ -42,134 +44,157 @@ class ItemForm extends Component {
       eldeki,
       taksim,
       fiyat,
-      aktif,
+      aktif
     });
   };
 
   componentDidMount(prevProps, prevState, snapshot) {
-    this.props.actions.fethKatagori()
+    //this.props.actions.fethKatagori();
+    const { id } = this.props.match.params;
+    if (id) {
+      // this.props.actions.fetchUrun(id);
+    }
   }
 
   render() {
-    const { adi, aciklama, takip, eldeki, taksim, fiyat, aktif, isSubmitted, } = this.state;
+    const {
+      adi,
+      aciklama,
+      takip,
+      eldeki,
+      taksim,
+      fiyat,
+      aktif,
+      isSubmitted
+    } = this.state;
     const { isLoading, msg, error } = this.props;
     let msgError = isSubmitted && error;
     let msgSuc = isSubmitted && !error;
     let isSubmitting = isSubmitted && isLoading;
-    
+
     return (
       <Container text>
         <Divider hidden />
         <Message
           attached
-          header='Menü Tanımlama'
-          content='Menüye yeni kalem ekleyebilir ve/veya güncelleme yapabilirsiniz!'
+          header="Menü Tanımlama"
+          content="Menüye yeni kalem ekleyebilir ve/veya güncelleme yapabilirsiniz!"
         />
         <Segment attached>
           <Form error={msgError} success={msgSuc} onSubmit={this.handleSubmit}>
-            <Message
-              error
-              icon='warning'
-              header='Hata Oluştu!'
-              content={msg}
-            />
+            <Message error icon="warning" header="Hata Oluştu!" content={msg} />
             <Message
               success
-              icon='thumbs up outline'
-              header='İşlem Başarılı'
+              icon="thumbs up outline"
+              header="İşlem Başarılı"
               content={msg}
             />
             <Form.Input
               required
-              placeholder='Adi'
-              name='adi'
+              placeholder="Adi"
+              name="adi"
               value={adi}
-              label='Adi'
+              label="Adi"
               onChange={this.handleChange}
             />
             <Form.Dropdown
-              options={this.props.options && this.props.options.map((val, ind) => ({
-                key: ind, text: val, value: val
-              }))}
-              placeholder='Kategori'
+              options={
+                this.props.options &&
+                this.props.options.map((val, ind) => ({
+                  key: ind,
+                  text: val,
+                  value: val
+                }))
+              }
+              placeholder="Kategori"
               required
               search
               selection
               clearable
               allowAdditions
-              additionLabel='Ekle '
-              label='Kategori'
-              name='taksim'
-              noResultsMessage='Kayıt bulunamadı.'
+              additionLabel="Ekle "
+              label="Kategori"
+              name="taksim"
+              noResultsMessage="Kayıt bulunamadı."
               value={taksim}
               onAddItem={this.handleAddition}
               onChange={this.handleChange}
             />
             <Form.TextArea
-              placeholder='Açıklama'
-              name='aciklama'
+              placeholder="Açıklama"
+              name="aciklama"
               value={aciklama}
-              label='Açıklama'
+              label="Açıklama"
               onChange={this.handleChange}
             />
 
             <Form.Input
-              type='number'
+              type="number"
               required
               min={0}
               step={0.1}
-              placeholder='Fiyat'
-              icon='lira sign'
-              name='fiyat'
+              placeholder="Fiyat"
+              icon="lira sign"
+              name="fiyat"
               value={fiyat}
-              label='Fiyat'
+              label="Fiyat"
               onChange={this.handleChange}
             />
             <Form.Checkbox
-              placeholder='Stok takip'
-              name='takip'
+              placeholder="Stok takip"
+              name="takip"
               checked={takip}
-              label='Stok takip yap'
+              label="Stok takip yap"
               onChange={this.toggle}
             />
             <Form.Input
-              type='number'
+              type="number"
               min={0}
-              placeholder='Stok Takip'
-              name='eldeki'
+              placeholder="Stok Takip"
+              name="eldeki"
               value={eldeki}
-              label='Stok Miktari'
+              label="Stok Miktari"
               onChange={this.handleChange}
               disabled={!takip}
             />
             <Form.Checkbox
-              placeholder='Menüden kaldır'
-              name='aktif'
+              placeholder="Menüden kaldır"
+              name="aktif"
               checked={aktif}
-              label='Menüden kaldır'
+              label="Menüden kaldır"
               onChange={this.toggle}
             />
-
-            <Button type='submit' disabled={adi === '' || taksim === ''} loading={isSubmitting} >
-              <span role='img' aria-label="xzxz" >👍</span> Kaydet
+            <Button
+              type="submit"
+              disabled={adi === "" || taksim === ""}
+              loading={isSubmitting}
+            >
+              <span role="img" aria-label="xzxz">
+                👍
+              </span>{" "}
+              Kaydet
             </Button>
           </Form>
         </Segment>
       </Container>
     );
-  };
-};
+  }
+}
 
 const mapStateToProps = state => ({
   isLoading: getIsFetching(state.responce),
-  options: item_reducers.getMenuKatagori(state.item),
+  options: item_reducers.getMenuKatagori(state),
   error: getError(state.responce),
   msg: getMsg(state.responce),
+  items: item_reducers.getMenuItems(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-  push: (path) => dispatch(push(path)),
-  actions: bindActionCreators(actions, dispatch),
+  push: path => dispatch(push(path)),
+  actions: bindActionCreators(actions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ItemForm);

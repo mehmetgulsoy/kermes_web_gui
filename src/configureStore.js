@@ -1,26 +1,26 @@
-import {createStore, compose, applyMiddleware} from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, compose, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
 import { createBrowserHistory } from "history";
-import io from 'socket.io-client';
-import axios from 'axios';
-// 'routerMiddleware': the new way of storing route changes with redux middleware since rrV4.
-import { routerMiddleware } from 'connected-react-router';
-import createRootReducer from './reducers';
+import io from "socket.io-client";
+import axios from "axios";
+import { routerMiddleware } from "connected-react-router";
+import createRootReducer from "./reducers";
 import { apiUrl } from "./constants/URLs";
 
-// eslint-disable-next-line 
+// eslint-disable-next-line
 const checkNetworkConnection = store => next => action => {
-  if(action.networkAction){
-    axios.get('http://ipv4.icanhazip.com/', {timeout:5000})
-    .then(() => next(action))
-    .catch(() => alert("Lütfen Ağ Bağlantınızı Kontrol Ediniz!"))   
-  }else{
-    next(action)
+  if (action.networkAction) {
+    axios
+      .get("http://ipv4.icanhazip.com/", { timeout: 5000 })
+      .then(() => next(action))
+      .catch(() => alert("Lütfen Ağ Bağlantınızı Kontrol Ediniz!"));
+  } else {
+    next(action);
   }
-}
+};
 
 export const history = createBrowserHistory();
-const socket = io(apiUrl);
+export const socket = io(apiUrl);
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = apiUrl;
@@ -30,13 +30,13 @@ function configureStore(initialState) {
   const middlewares = [
     // Add other middleware on this line...
     //checkNetworkConnection,
-    thunk.withExtraArgument({axios, socket}),
-    reactRouterMiddleware,
+    thunk.withExtraArgument({ axios, socket }),
+    reactRouterMiddleware
   ];
 
   let composeEnhancers = compose;
-  
-  if (process.env.NODE_ENV !== 'production') {
+
+  if (process.env.NODE_ENV !== "production") {
     composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
   }
 
