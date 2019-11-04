@@ -1,4 +1,4 @@
-import { push } from "connected-react-router";
+import { push, goBack } from "connected-react-router";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -48,11 +48,24 @@ class ItemForm extends Component {
     });
   };
 
+  componentWillReceiveProps() {}
+
   componentDidMount(prevProps, prevState, snapshot) {
-    //this.props.actions.fethKatagori();
     const { id } = this.props.match.params;
     if (id) {
-      // this.props.actions.fetchUrun(id);
+      const data = this.props.items[id];
+      console.log("DidMount", data);
+      if (data) {
+        this.setState({
+          adi: data.urun,
+          aciklama: data.aciklama,
+          taksim: data.katagori,
+          takip: data.stok_takip === "0",
+          eldeki: data.miktar,
+          fiyat: data.fiyat,
+          aktif: data.durum === "0"
+        });
+      }
     }
   }
 
@@ -68,6 +81,10 @@ class ItemForm extends Component {
       isSubmitted
     } = this.state;
     const { isLoading, msg, error } = this.props;
+
+    const data = this.props.items[this.props.match.params.id];
+    console.log("render", data);
+
     let msgError = isSubmitted && error;
     let msgSuc = isSubmitted && !error;
     let isSubmitting = isSubmitted && isLoading;
@@ -168,11 +185,18 @@ class ItemForm extends Component {
               type="submit"
               disabled={adi === "" || taksim === ""}
               loading={isSubmitting}
+              primary
             >
               <span role="img" aria-label="xzxz">
                 👍
               </span>{" "}
               Kaydet
+            </Button>
+            <Button onClick={() => this.props.back()} color="red">
+              <span role="img" aria-label="xzxz">
+                👈
+              </span>{" "}
+              Kapat
             </Button>
           </Form>
         </Segment>
@@ -191,6 +215,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   push: path => dispatch(push(path)),
+  back: () => dispatch(goBack()),
   actions: bindActionCreators(actions, dispatch)
 });
 
