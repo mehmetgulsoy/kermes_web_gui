@@ -8,18 +8,15 @@ import * as item_actions from "../actions/item";
 import { getIsFetching, getError, getMsg } from "../reducers/responce";
 import { getMenuItems } from "../reducers/item";
 
-class ItemList extends Component {
+class Personeller extends Component {
   state = {};
 
-  getItem(filter) {
-    //let items =  Object.entries(this.props.items);
+  getPersonel(filter) {
     return Object.values(this.props.items);
-
-    //return items.filter( (item) => filter !== '' || item.urun === filter )
   }
 
-  handleRowClick(item) {
-    this.props.push(`/menu/${item}`);
+  handleRowClick(no) {
+    this.props.push(`/personel/${no}`);
   }
 
   render() {
@@ -29,14 +26,14 @@ class ItemList extends Component {
         <Table celled selectable striped>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Urun</Table.HeaderCell>
-              <Table.HeaderCell>Katagori</Table.HeaderCell>
+              <Table.HeaderCell>Adı Soyadı</Table.HeaderCell>
+              <Table.HeaderCell>Görevi</Table.HeaderCell>
               <Table.HeaderCell>Fiyat</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.getItem() &&
-              this.getItem().map(item => (
+            {this.getPersonel() &&
+              this.getPersonel().map(item => (
                 <Table.Row
                   key={item.urun}
                   onClick={() => this.handleRowClick(item.urun)}
@@ -64,7 +61,8 @@ const mapDispatchToProps = dispatch => ({
   push: path => dispatch(push(path)),
   item_actions: bindActionCreators(item_actions, dispatch)
 });
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ItemList);
+)(Personeller);

@@ -11,6 +11,7 @@ import AdminPage from "./components/AdminPage";
 import ItemForm from "./components/ItemForm";
 import MeetingFormModal from "./components/Model";
 import ItemList from "./components/ItemList";
+import Personel from "./components/Personeller";
 import * as actions from "./actions/item";
 import { socket } from "./configureStore";
 
@@ -31,8 +32,9 @@ class App extends Component {
           <Route path="/musteri" component={CustomerPage} />
           <Route path="/admin" component={AdminPage} />
           <Route path="/menu/:id?" component={ItemForm} />
-          <Route path="/menu_list" component={ItemList} />
+          <Route path="/menuler" component={ItemList} />
           <Route path="/modal" component={MeetingFormModal} />
+          <Route path="/personeller" component={Personel} />
           <Route component={NotFoundPage} />
         </Switch>
       </div>

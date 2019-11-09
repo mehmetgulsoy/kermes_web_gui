@@ -8,7 +8,8 @@ import {
   Divider,
   Form,
   Message,
-  Segment
+  Segment,
+  Icon
 } from "semantic-ui-react";
 import * as actions from "../actions/item";
 import * as item_reducers from "../reducers/item";
@@ -21,6 +22,7 @@ class ItemForm extends Component {
     aktif: false,
     aciklama: "",
     eldeki: 0,
+    sure: 0,
     taksim: "",
     formErrors: {},
     isSubmitted: false,
@@ -47,8 +49,6 @@ class ItemForm extends Component {
       aktif
     });
   };
-
-  componentWillReceiveProps() {}
 
   componentDidMount(prevProps, prevState, snapshot) {
     const { id } = this.props.match.params;
@@ -78,6 +78,7 @@ class ItemForm extends Component {
       taksim,
       fiyat,
       aktif,
+      sure,
       isSubmitted
     } = this.state;
     const { isLoading, msg, error } = this.props;
@@ -157,6 +158,18 @@ class ItemForm extends Component {
               label="Fiyat"
               onChange={this.handleChange}
             />
+
+            <Form.Input
+              type="number"
+              min={0}
+              step={0.1}
+              placeholder="Süre"
+              name="sure"
+              value={sure}
+              icon="bell"
+              label="Süre"
+              onChange={this.handleChange}
+            />
             <Form.Checkbox
               placeholder="Stok takip"
               name="takip"
@@ -187,15 +200,11 @@ class ItemForm extends Component {
               loading={isSubmitting}
               primary
             >
-              <span role="img" aria-label="xzxz">
-                👍
-              </span>{" "}
+              <Icon disabled name="save" />
               Kaydet
             </Button>
-            <Button onClick={() => this.props.back()} color="red">
-              <span role="img" aria-label="xzxz">
-                👈
-              </span>{" "}
+            <Button type="button" onClick={() => this.props.back()} color="red">
+              <Icon disabled name="sign out alternate" />
               Kapat
             </Button>
           </Form>
