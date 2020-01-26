@@ -20,7 +20,8 @@ const checkNetworkConnection = store => next => action => {
 };
 
 export const history = createBrowserHistory();
-export const socket = io(apiUrl);
+//export const socket = io(apiUrl);
+export const socket = {};
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = apiUrl;

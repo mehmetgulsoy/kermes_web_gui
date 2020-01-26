@@ -6,7 +6,7 @@ import * as MSG from "../constants/msg";
 const UserAuthSuccses = respons => ({
   type: types.USER_AUTH,
   isAuthenticated: true,
-  userName: respons.data.data.uye
+  userName: respons && respons.uye
 });
 
 const UserAuthFail = () => ({
@@ -15,7 +15,7 @@ const UserAuthFail = () => ({
   userName: ""
 });
 
-export const login = data => (dispatch, getState, { axios, socket }) => {
+export const login2 = data => (dispatch, getState, { axios, socket }) => {
   if (getIsFetching(getState().responce)) {
     return Promise.resolve();
   }
@@ -34,6 +34,42 @@ export const login = data => (dispatch, getState, { axios, socket }) => {
         });
         dispatch(UserAuthSuccses(respons));
         dispatch(push("/"));
+      },
+      error => {
+        dispatch({
+          type: types.NETWORK_REQUEST_END,
+          error: true,
+          msg: (error.response && error.response.data.msg) || MSG.FAIL_MSG
+        });
+        dispatch(UserAuthFail());
+      }
+    );
+};
+
+export const login = data => (dispatch, getState, { axios, socket }) => {
+  if (getIsFetching(getState().responce)) {
+    return Promise.resolve();
+  }
+  dispatch({
+    type: types.NETWORK_REQUEST_BEGIN
+  });
+  return axios
+    .post("/rpc/login", data)
+    .then(dispatch(UserAuthFail()))
+    .then(
+      respons => {
+        dispatch({
+          type: types.NETWORK_REQUEST_END,
+          error: false,
+          msg: (respons.data && respons.data.msg) || MSG.SUCCESS_MSG
+        });
+        dispatch(UserAuthSuccses(data));
+        dispatch(push("/"));
+        axios.defaults.headers.common = {
+          Authorization: `Bearer ${respons.data}`
+        };
+        localStorage.removeItem("jeton");
+        localStorage.setItem("jeton", respons.data);
       },
       error => {
         dispatch({

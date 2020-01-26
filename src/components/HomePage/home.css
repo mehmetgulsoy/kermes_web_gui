@@ -1,0 +1,45 @@
+#homepage {
+  min-height: 100vh;
+  display: grid;
+  grid-gap: 1em;
+  grid: 'header'auto 'nav'auto 'main'1fr 'footer'auto / 1fr;
+}
+
+@media (min-width: 40em) {
+  #homepage {
+    grid: 'header header'auto 'nav main'1fr 'nav footer'auto / 12em 1fr;
+  }
+}
+
+#homepage header {
+  grid-area: header;
+}
+
+#homepage nav {
+  grid-area: nav;
+}
+
+#homepage main {
+  grid-area: main;
+}
+
+#homepage footer {
+  grid-area: footer;
+}
+
+/* show… */
+#homepage body {
+  background: #eff0f1;
+}
+
+#homepage header,
+#homepage nav,
+#homepage main,
+#homepage footer {
+  background: var(--background);
+  padding: 1em;
+}
+
+#homepage h1 {
+  font-family: var(--zilla);
+}
