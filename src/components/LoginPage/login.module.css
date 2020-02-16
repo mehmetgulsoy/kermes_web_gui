@@ -1,0 +1,77 @@
+.loginForm {
+  display: grid;
+  grid-auto-columns: minmax(320px, 450px);
+  min-height: 100vh;
+  align-content: center;
+  justify-content: center;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+.loginForm h2 {
+  text-align: center;
+
+}
+
+/* Color Theme Swatches in Hex */
+.Flavour-1-hex {
+  color: #84BF04;
+}
+
+.Flavour-2-hex {
+  color: #F2C12E;
+}
+
+.Flavour-3-hex {
+  color: #F26716;
+}
+
+.Flavour-4-hex {
+  color: #8C1C03;
+}
+
+.Flavour-5-hex {
+  color: #400D01;
+}
+
+/* Color Theme Swatches in RGBA */
+.Flavour-1-rgba {
+  color: rgba(131, 191, 3, 1);
+}
+
+.Flavour-2-rgba {
+  color: rgba(242, 193, 46, 1);
+}
+
+.Flavour-3-rgba {
+  color: rgba(242, 102, 21, 1);
+}
+
+.Flavour-4-rgba {
+  color: rgba(140, 28, 2, 1);
+}
+
+.Flavour-5-rgba {
+  color: rgba(63, 12, 1, 1);
+}
+
+/* Color Theme Swatches in HSLA */
+.Flavour-1-hsla {
+  color: hsla(78, 96, 38, 1);
+}
+
+.Flavour-2-hsla {
+  color: hsla(45, 88, 56, 1);
+}
+
+.Flavour-3-hsla {
+  color: hsla(22, 89, 51, 1);
+}
+
+.Flavour-4-hsla {
+  color: hsla(11, 96, 28, 1);
+}
+
+.Flavour-5-hsla {
+  color: hsla(11, 96, 12, 1);
+}

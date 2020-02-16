@@ -1,4 +1,8 @@
-#homepage {
+:root {
+  --background: #eff0f1;
+}
+
+.dashboard {
   min-height: 100vh;
   display: grid;
   grid-gap: 1em;
@@ -6,40 +10,40 @@
 }
 
 @media (min-width: 40em) {
-  #homepage {
-    grid: 'header header'auto 'nav main'1fr 'nav footer'auto / 12em 1fr;
+  .dashboard {
+    grid: 'header header'auto 'nav main'1fr 'nav footer'auto / 15em 1fr;
   }
 }
 
-#homepage header {
+.dashboard>header {
   grid-area: header;
 }
 
-#homepage nav {
+.dashboard>nav {
   grid-area: nav;
 }
 
-#homepage main {
+.dashboard>main {
   grid-area: main;
 }
 
-#homepage footer {
+.dashboard>footer {
   grid-area: footer;
 }
 
 /* show… */
-#homepage body {
+.dashboard>body {
   background: #eff0f1;
 }
 
-#homepage header,
-#homepage nav,
-#homepage main,
-#homepage footer {
+.dashboard>header,
+.dashboard>nav,
+.dashboard>main,
+.dashboard>footer {
   background: var(--background);
   padding: 1em;
 }
 
-#homepage h1 {
+.dashboard>h1 {
   font-family: var(--zilla);
 }

@@ -6,25 +6,24 @@ import { connect } from "react-redux";
 import {
   Button,
   Form,
-  Grid,
   Header,
-  Image,
   Message,
-  Segment
+  Segment,
+  Icon
 } from "semantic-ui-react";
 
 import * as auth from "../../actions/auth";
 import * as msg from "../../constants/msg";
 import * as auth_reducers from "../../reducers/auth";
 import * as res_reducers from "../../reducers/responce";
-
-import "./login.css";
+import styles from "./login.module.css";
 
 class LoginForm extends Component {
   state = {
     uye: "",
     sifre: "",
-    formErrors: {}
+    formErrors: {},
+    isLoading: false
   };
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
@@ -43,57 +42,58 @@ class LoginForm extends Component {
       console.log("hata: ", errors);
       return;
     }
-    this.props.auth.login({ uye, sifre });
+    //this.props.auth.login({ uye, sifre });
+    console.log({ uye, sifre });
   };
 
   render() {
-    const { formErrors } = this.state;
+    const { formErrors, isLoading } = this.state;
     const { res_error, res_msg } = this.props;
+
     return (
-      <div id="loginpage">
-        <div id="loginForm">
-          <Header as="h2">
-            <Image src="/favicon.ico" /> Üye Girişi
-          </Header>
-          <Form error={res_error} size="large" onSubmit={this.handleSubmit}>
-            <Segment stacked>
-              <Message
-                error
-                header="Hata Oluştu!"
-                content={res_msg}
-                //list={errorMessages || []}
-              />
-              <Form.Input
-                fluid
-                required
-                icon="user"
-                iconPosition="left"
-                placeholder="uye@firma"
-                pointing="right"
-                name="uye"
-                error={formErrors.uye}
-                onChange={this.handleChange}
-              />
-              <Form.Input
-                fluid
-                required
-                icon="lock"
-                iconPosition="left"
-                placeholder="Şifre"
-                type="password"
-                name="sifre"
-                error={formErrors.sifre}
-                onChange={this.handleChange}
-              />
-              <Button primary fluid size="large">
-                Giriş
-              </Button>
-            </Segment>
-          </Form>
-          <Message style={{ textAlign: "justify" }}>
-            <Link to="/"> Şifremi unuttum </Link>
-          </Message>
-        </div>
+      <div className={styles.loginForm}>
+        <Header as="h2">
+          <Icon name="coffee" size="big" /> Üye Girişi
+        </Header>
+
+        <Form error={res_error} onSubmit={this.handleSubmit}>
+          <Segment stacked>
+            <Message
+              error
+              header="Hata Oluştu!"
+              content={res_msg}
+              //list={errorMessages || []}
+            />
+            <Form.Input
+              fluid
+              required
+              icon="user"
+              iconPosition="left"
+              placeholder="uye@firma"
+              pointing="right"
+              name="uye"
+              error={formErrors.uye}
+              onChange={this.handleChange}
+            />
+            <Form.Input
+              fluid
+              required
+              icon="lock"
+              iconPosition="left"
+              placeholder="Şifre"
+              type="password"
+              name="sifre"
+              error={formErrors.sifre}
+              onChange={this.handleChange}
+            />
+            <Button primary fluid size="large" loading={isLoading}>
+              Giriş
+            </Button>
+          </Segment>
+        </Form>
+        <Message style={{ textAlign: "justify" }}>
+          <Link to="/"> Şifremi unuttum </Link>
+        </Message>
       </div>
     );
   }
