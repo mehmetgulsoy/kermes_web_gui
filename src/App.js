@@ -8,7 +8,7 @@ import NotFoundPage from "./components/NotFoundPage";
 import CustomerPage from "./components/CustomerPage";
 import AdminPage from "./components/AdminPage";
 import ItemForm from "./components/ItemForm";
-import MeetingFormModal from "./components/Model";
+import MeetingFormModal from "./components/Modal";
 import ItemList from "./components/ItemList";
 import Personel from "./components/Personeller";
 
