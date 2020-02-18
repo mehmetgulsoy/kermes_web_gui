@@ -2,37 +2,46 @@ main header {
   margin-bottom: 1em;
   background-color: rgb(241, 240, 240);
   padding: 0.5em;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+
+}
+
+main header>* {
+  display: inline-block;
 }
 
 .bolge {
   display: grid;
   padding: 0.5em;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  border: 1px solid  rgb(209, 206, 206);
+  grid-template-columns: repeat(auto-fit, minmax(75px, 100px));
+  border: 1px solid rgb(209, 206, 206);
   margin-bottom: 1em;
+  border-radius: 3px;
 }
 
-.bolge > * {
+.bolge>* {
   background-color: rgb(212, 212, 233);
   border-radius: 3px;
-  margin: .5em;
-  padding: .5em;
+  margin: 0.5em;
+  padding: 0.5em;
 }
 
 .masa {
   display: grid;
   padding: 0.5em;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
   border: 1px solid rgb(209, 206, 206);
+  border-radius: 3px;
 }
 
-.selected{
-  background-color: blueviolet;
+.selected {
+  background-color: rgb(204, 175, 231);
 }
 
-.masa > * {
+.masa>* {
   background-color: rgb(212, 212, 233);
   border-radius: 3px;
-  margin: .5em;
-  padding: .5em;
+  margin: 0.5em;
+  padding: 0.5em;
 }

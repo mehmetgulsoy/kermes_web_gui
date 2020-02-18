@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: grid;
   grid-gap: .1em;
-  grid: "header"auto "nav"auto "main"1fr "footer"auto / 1fr;
+  grid: "header"auto "nav"auto "main"1fr / 1fr;
   background-color: white;
 }
 
@@ -13,7 +13,7 @@
 
 @media (min-width: 40em) {
   .dashboard {
-    grid: ". header"auto "nav main"1fr "nav footer"auto / auto 1fr;
+    grid: ". header"auto "nav main"1fr "nav ."auto / auto 1fr;
   }
 
   .dashboard footer {
@@ -55,13 +55,10 @@
   grid-area: main;
 }
 
-.dashboard>footer {
-  grid-area: footer;
-}
+
 
 .dashboard>header,
 .dashboard>nav,
-.dashboard>main,
-.dashboard>footer {
+.dashboard>main {
   padding: 1em;
 }

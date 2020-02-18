@@ -105,9 +105,6 @@ class Dashboard extends Component {
           */}
           </Switch>
         </main>
-        <footer>
-          <h4>KitaSoft</h4>
-        </footer>
       </div>
     );
   }
