@@ -8,7 +8,6 @@ export default class ModalModal extends React.Component {
   render() {
     const { elem, size, header, decs, btn1, btn2 } = this.props;
     const { modalOpen } = this.setState;
-    console.log(children);
 
     return (
       <Modal trigger={elem || <Button>Diaolog</Button>} size={size || "tiny"}>

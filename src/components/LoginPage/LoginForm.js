@@ -14,8 +14,7 @@ import {
 
 import * as auth from "../../actions/auth";
 import * as msg from "../../constants/msg";
-import * as auth_reducers from "../../reducers/auth";
-import * as res_reducers from "../../reducers/responce";
+import * as authReducers from "../../reducers/auth";
 import styles from "./login.module.css";
 
 class LoginForm extends Component {
@@ -28,7 +27,7 @@ class LoginForm extends Component {
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
   handleSubmit = () => {
-    const { uye, sifre } = this.state;
+    const { uye, sifre, isLoading } = this.state;
     let errors = {};
 
     if (!uye) errors.uye = msg.REQUIRED_FIELD_MSG;
@@ -42,14 +41,13 @@ class LoginForm extends Component {
       console.log("hata: ", errors);
       return;
     }
-    //this.props.auth.login({ uye, sifre });
-    console.log({ uye, sifre });
+    this.setState({ isLoading: true });
+    this.props.auth.login({ uye, sifre });
   };
 
   render() {
     const { formErrors, isLoading } = this.state;
     const { res_error, res_msg } = this.props;
-
     return (
       <div className={styles.loginForm}>
         <Header as="h2">
@@ -86,7 +84,12 @@ class LoginForm extends Component {
               error={formErrors.sifre}
               onChange={this.handleChange}
             />
-            <Button primary fluid size="large" loading={isLoading}>
+            <Button
+              primary
+              fluid
+              size="large"
+              loading={isLoading && res_msg === ""}
+            >
               Giriş
             </Button>
           </Segment>
@@ -100,10 +103,10 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: auth_reducers.getisAuthenticated(state.auth),
-  userName: auth_reducers.getUserName(state.auth),
-  res_error: res_reducers.getError(state.responce),
-  res_msg: res_reducers.getMsg(state.responce)
+  isAuthenticated: authReducers.getisAuthenticated(state.auth),
+  userName: authReducers.getUserName(state.auth),
+  res_error: authReducers.getError(state.auth),
+  res_msg: authReducers.getMsg(state.auth)
 });
 
 const mapDispatchToProps = dispatch => ({

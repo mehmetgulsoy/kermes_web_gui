@@ -3,7 +3,7 @@ main header {
   background-color: rgb(241, 240, 240);
   padding: 0.5em;
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: auto auto 1fr auto auto auto;
 
 }
 
@@ -29,8 +29,9 @@ main header>* {
 
 .masa {
   display: grid;
+  gap: 1em;
   padding: 0.5em;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 150px));
   border: 1px solid rgb(209, 206, 206);
   border-radius: 3px;
 }
@@ -39,9 +40,19 @@ main header>* {
   background-color: rgb(204, 175, 231);
 }
 
+.selected_section {
+  border-color: #CCE2FF;
+}
+
 .masa>* {
   background-color: rgb(212, 212, 233);
   border-radius: 3px;
   margin: 0.5em;
   padding: 0.5em;
+  width: 150px;
+  height: 150px;
 }
+
+/*
+#CCE2FF
+*/

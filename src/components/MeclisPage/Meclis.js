@@ -78,22 +78,32 @@ const ModalModal = props => (
 
 class Meslic extends Component {
   state = {
-    secilen_bolge: "",
-    secilen_masa: ""
+    secilen_elemen: "",
+    selected_section: ""
   };
 
   handleBolgeClick = e => {
-    this.setState({ secilen_bolge: e.target.innerHTML });
+    this.setState({
+      secilen_elemen: e.target.innerHTML,
+      selected_section: "bole"
+    });
   };
 
   handleMasaClick = e => {
-    this.setState({ secilen_masa: e.target.innerHTML });
+    this.setState({
+      secilen_elemen: e.target.innerHTML,
+      selected_section: "masa"
+    });
+  };
+
+  handleSectionClick = e => {
+    this.setState({ selected_section: e.currentTarget.id });
   };
 
   render() {
     const bolgelerbuttons = bolgeler.map(bolge => {
       let className = "";
-      if (this.state.secilen_bolge === bolge.ad) {
+      if (this.state.secilen_elemen === bolge.ad) {
         className = styles.selected;
       }
       return (
@@ -108,7 +118,7 @@ class Meslic extends Component {
     });
 
     const masalarbuttons = masalar
-      .filter(masa => masa.bolge === this.state.secilen_bolge)
+      .filter(masa => masa.bolge === this.state.secilen_elemen)
       .map(masa => (
         <div key={masa.id} onClick={this.handleMasaClick}>
           {masa.ad}
@@ -116,13 +126,24 @@ class Meslic extends Component {
       ));
 
     const btn = <button> Denem</button>;
+    let classNameBolge = styles.bolge;
+    if (this.state.selected_section === "bolge")
+      classNameBolge += " " + styles.selected_section;
+
+    let classNameMasa = styles.masa;
+    if (this.state.selected_section === "masa")
+      classNameMasa += " " + styles.selected_section;
 
     return (
       <div>
         <header>
           <Icon size="large" name="chess board" />
           <b> Bölge/Masa</b>
-
+          <b></b>
+          <div>
+            <Icon name="trash alternate" />
+            Masa Güncelle
+          </div>
           <ModalModal header={"Masa Ekle"} />
           <div>
             <Icon name="trash alternate" />
@@ -130,8 +151,20 @@ class Meslic extends Component {
           </div>
         </header>
 
-        <section className={styles.bolge}>{bolgelerbuttons}</section>
-        <section className={styles.masa}>{masalarbuttons}</section>
+        <section
+          id="bolge"
+          className={classNameBolge}
+          onClick={this.handleSectionClick}
+        >
+          {bolgelerbuttons}
+        </section>
+        <section
+          id="masa"
+          className={classNameMasa}
+          onClick={this.handleSectionClick}
+        >
+          {masalarbuttons}
+        </section>
         <ShowModal btn1={{ color: "yellow", text: "tamam" }} />
       </div>
     );

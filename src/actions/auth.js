@@ -1,110 +1,36 @@
 import { push } from "connected-react-router";
-import { getIsFetching } from "../reducers/responce";
 import * as types from "../constants/actionTypes";
 import * as MSG from "../constants/msg";
+import { postData } from "../utils/fetch_utils";
 
-const UserAuthSuccses = respons => ({
-  type: types.USER_AUTH,
-  isAuthenticated: true,
-  userName: respons && respons.uye
-});
-
-const UserAuthFail = () => ({
-  type: types.USER_AUTH,
-  isAuthenticated: false,
-  userName: ""
-});
-
-export const login2 = data => (dispatch, getState, { axios, socket }) => {
-  if (getIsFetching(getState().responce)) {
-    return Promise.resolve();
-  }
-  dispatch({
-    type: types.NETWORK_REQUEST_BEGIN
-  });
-  return axios
-    .post("/login", data)
-    .then(dispatch(UserAuthFail()))
-    .then(
-      respons => {
+export const login = data => (dispatch, getState) => {
+  dispatch({ type: types.USER_AUTH_BEGIN });
+  return postData("/api/rpc/login", data)
+    .then(response => Promise.all([response.ok, response.json()]))
+    .then(response => {
+      if (response[0] === true) {
         dispatch({
-          type: types.NETWORK_REQUEST_END,
+          type: types.USER_AUTH_SUCCESS,
           error: false,
-          msg: (respons.data && respons.data.msg) || MSG.SUCCESS_MSG
+          msg: MSG.SUCCESS_MSG,
+          isAuthenticated: true,
+          userName: data.uye.split("@", 2)[0],
+          firma: data.uye.split("@", 2)[1]
         });
-        dispatch(UserAuthSuccses(respons));
         dispatch(push("/"));
-      },
-      error => {
-        dispatch({
-          type: types.NETWORK_REQUEST_END,
-          error: true,
-          msg: (error.response && error.response.data.msg) || MSG.FAIL_MSG
-        });
-        dispatch(UserAuthFail());
-      }
-    );
-};
-
-export const login = data => (dispatch, getState, { axios, socket }) => {
-  if (getIsFetching(getState().responce)) {
-    return Promise.resolve();
-  }
-  dispatch({
-    type: types.NETWORK_REQUEST_BEGIN
-  });
-  return axios
-    .post("/rpc/login", data)
-    .then(dispatch(UserAuthFail()))
-    .then(
-      respons => {
-        dispatch({
-          type: types.NETWORK_REQUEST_END,
-          error: false,
-          msg: (respons.data && respons.data.msg) || MSG.SUCCESS_MSG
-        });
-        dispatch(UserAuthSuccses(data));
-        dispatch(push("/"));
-        axios.defaults.headers.common = {
-          Authorization: `Bearer ${respons.data}`
-        };
         localStorage.removeItem("jeton");
-        localStorage.setItem("jeton", respons.data);
-      },
-      error => {
+        localStorage.setItem("jeton", response[1][0].token);
+      } else {
         dispatch({
-          type: types.NETWORK_REQUEST_END,
+          type: types.USER_AUTH_FAIL,
           error: true,
-          msg: (error.response && error.response.data.msg) || MSG.FAIL_MSG
+          msg: response[1].message || MSG.FAIL_MSG
         });
-        dispatch(UserAuthFail());
       }
-    );
+    })
+    .catch(error => {
+      console.error("Network operasyonunda hata oluştu:", error);
+    });
 };
 
-export const logOut = () => (dispatch, getState, { axios, socket }) => {
-  if (getIsFetching(getState().responce)) {
-    return Promise.resolve();
-  }
-  dispatch({
-    type: types.NETWORK_REQUEST_BEGIN
-  });
-  return axios.get("/logout").then(
-    respons => {
-      dispatch({
-        type: types.NETWORK_REQUEST_END,
-        error: false,
-        msg: MSG.SUCCESS_MSG
-      });
-      dispatch(dispatch(UserAuthFail));
-    },
-    error => {
-      dispatch({
-        type: types.NETWORK_REQUEST_END,
-        error: true,
-        msg: MSG.FAIL_MSG
-      });
-      dispatch(dispatch(UserAuthFail));
-    }
-  );
-};
+export const logOut = () => (dispatch, getState, { axios, socket }) => {};
