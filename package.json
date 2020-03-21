@@ -23,9 +23,11 @@
     "test1": "react-scripts test",
     "eject1": "react-scripts eject",
     "start": "craco start",
+    "start_api": "cd D:\\Proje\\kermes\\kermes_api && env\\Scripts\\flask.exe run --no-debugger",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject"
+
   },
   "eslintConfig": {
     "extends": "react-app"
