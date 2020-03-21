@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from "react";
-import { Icon, Button, Segment, Modal, Form } from "semantic-ui-react";
+import { Icon, Button, Segment, Modal, Form, Confirm } from "semantic-ui-react";
 import ShowModal from "../ShowModal";
 import styles from "./style.module.css";
+import classNames from "classnames";
 
 const bolgeler = [
   {
@@ -79,20 +80,31 @@ const ModalModal = props => (
 class Meslic extends Component {
   state = {
     secilen_elemen: "",
-    selected_section: ""
+    secilen_bolge_elem: "",
+    selected_section: "",
+    confirm_dlg_open: false
+  };
+
+  open_dialog = e => {
+    this.setState({ confirm_dlg_open: true });
+    console.log(e);
+  };
+
+  close_dialog = e => {
+    this.setState({ confirm_dlg_open: false });
+    console.log(e);
   };
 
   handleBolgeClick = e => {
     this.setState({
       secilen_elemen: e.target.innerHTML,
-      selected_section: "bole"
+      secilen_bolge_elem: e.target.innerHTML
     });
   };
 
   handleMasaClick = e => {
     this.setState({
-      secilen_elemen: e.target.innerHTML,
-      selected_section: "masa"
+      secilen_elemen: e.target.innerHTML
     });
   };
 
@@ -101,15 +113,17 @@ class Meslic extends Component {
   };
 
   render() {
+    const { secilen_elemen, secilen_bolge_elem, selected_section } = this.state;
+
     const bolgelerbuttons = bolgeler.map(bolge => {
-      let className = "";
-      if (this.state.secilen_elemen === bolge.ad) {
-        className = styles.selected;
-      }
+      let blgClass = classNames({
+        [styles.selected]: secilen_bolge_elem === bolge.ad,
+        [styles.selected_section]: secilen_elemen === bolge.ad
+      });
       return (
         <div
           key={bolge.id}
-          className={className}
+          className={blgClass}
           onClick={this.handleBolgeClick}
         >
           {bolge.ad}
@@ -118,29 +132,39 @@ class Meslic extends Component {
     });
 
     const masalarbuttons = masalar
-      .filter(masa => masa.bolge === this.state.secilen_elemen)
+      .filter(masa => masa.bolge === this.state.secilen_bolge_elem)
       .map(masa => (
         <div key={masa.id} onClick={this.handleMasaClick}>
           {masa.ad}
         </div>
       ));
 
-    const btn = <button> Denem</button>;
-    let classNameBolge = styles.bolge;
-    if (this.state.selected_section === "bolge")
-      classNameBolge += " " + styles.selected_section;
+    let classNameBolge = classNames({
+      [styles.bolge]: true,
+      [styles.selected_section]: selected_section === "bolge"
+    });
 
-    let classNameMasa = styles.masa;
-    if (this.state.selected_section === "masa")
-      classNameMasa += " " + styles.selected_section;
+    let classNameMasa = classNames({
+      [styles.masa]: true,
+      [styles.selected_section]: selected_section === "masa"
+    });
 
     return (
       <div>
+        <Confirm
+          content="Emin misin?"
+          open={this.state.confirm_dlg_open}
+          onCancel={this.close_dialog}
+          onConfirm={this.close_dialog}
+        />
         <header>
-          <Icon size="large" name="chess board" />
-          <b> Bölge/Masa</b>
-          <b></b>
           <div>
+            <Icon size="large" name="chess board" />
+            <b> Bölge/Masa</b>
+          </div>
+          <b></b>
+          <b></b>
+          <div onClick={this.open_dialog}>
             <Icon name="trash alternate" />
             Masa Güncelle
           </div>
@@ -158,6 +182,7 @@ class Meslic extends Component {
         >
           {bolgelerbuttons}
         </section>
+
         <section
           id="masa"
           className={classNameMasa}

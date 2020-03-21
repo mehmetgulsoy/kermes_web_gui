@@ -3,12 +3,18 @@ main header {
   background-color: rgb(241, 240, 240);
   padding: 0.5em;
   display: grid;
+  gap: 0.5em;
   grid-template-columns: auto auto 1fr auto auto auto;
-
 }
 
-main header>* {
+main header > * {
   display: inline-block;
+}
+
+main header > div {
+  padding: 0.5em;
+  border: 1px solid rgb(245, 187, 187);
+  border-radius: 0.5em;
 }
 
 .bolge {
@@ -20,7 +26,7 @@ main header>* {
   border-radius: 3px;
 }
 
-.bolge>* {
+.bolge > * {
   background-color: rgb(212, 212, 233);
   border-radius: 3px;
   margin: 0.5em;
@@ -41,10 +47,10 @@ main header>* {
 }
 
 .selected_section {
-  border-color: #CCE2FF;
+  border: 2px solid #ee5d5d;
 }
 
-.masa>* {
+.masa > * {
   background-color: rgb(212, 212, 233);
   border-radius: 3px;
   margin: 0.5em;

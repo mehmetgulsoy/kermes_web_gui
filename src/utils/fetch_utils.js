@@ -15,3 +15,4 @@ export async function postData(url = "", data = {}) {
   //return await response.json(); // parses JSON response into native JavaScript objects
   return await response;
 }
+
