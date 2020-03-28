@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
-import { Menu, Icon, Segment } from "semantic-ui-react";
+import { Menu, Icon  } from "semantic-ui-react";
 import NotFoundPage from "../../components/NotFoundPage";
 import Meclis from "../MeclisPage/Meclis";
+import MenuList from "../MenuListPage/MenuList";
 import CustomerPage from "../CustomerPage";
 import styles from "./style.module.css";
 
@@ -47,7 +48,7 @@ class Dashboard extends Component {
               Tanımlamalar
               <Menu.Menu>
                 {this.menuItem("Masa / Bölge", "Meclis")}
-                {this.menuItem("Menu / Ürünler", "Tanımlamalar")}
+                {this.menuItem("Menu / Ürünler", "Menuler")}
                 {this.menuItem("Müşteri", "Tanımlamalar")}
               </Menu.Menu>
             </Menu.Item>
@@ -88,21 +89,9 @@ class Dashboard extends Component {
         </nav>
         <main>
           <Switch>
-            <Route exact path="/dashboard/meclis" component={Meclis} />
-
-            {/*
-            <Route exact path="/" component={HomePage} />
-           
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/musteri" component={CustomerPage} />
-          <Route path="/admin" component={AdminPage} />
-          <Route path="/menu/:id?" component={ItemForm} />
-          <Route path="/menuler" component={ItemList} />
-          <Route path="/modal" component={MeetingFormModal} />
-          <Route path="/personeller" component={Personel} />
-          
-          <Route component={NotFoundPage} />
-          */}
+            <Route exact path="/dashboard/meclis"  component={Meclis} />
+            <Route exact path="/dashboard/menuler" component={MenuList}/>
+            <Route path="*"  component={NotFoundPage}/>         
           </Switch>
         </main>
       </div>
