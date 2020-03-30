@@ -18,17 +18,14 @@
     "socket.io-client": "^2.2.0"
   },
   "scripts": {
-    "start1": "react-scripts start",
-    "build1": "react-scripts build",
-    "test1": "react-scripts test",
-    "eject1": "react-scripts eject",
     "start": "craco start",
     "start_winapi": "cd api && venv\\Scripts\\flask.exe run --no-debugger",
     "start_api": "cd api && venv/bin/flask run --no-debugger",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
-
+    "eject": "craco eject",
+    "db_backup": "pg_dump -h 192.168.33.10 -p 5432 -U postgres -F p -C -v -b -f schema.sql yettim",
+    "db_restore": "psql -h 192.168.33.10 -p 5432 -U postgres -f schema.sql"
   },
   "eslintConfig": {
     "extends": "react-app"
