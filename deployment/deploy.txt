@@ -1,0 +1,50 @@
+
+#Ubuntu'ya kullanıcı ekleme
+$ adduser --gecos "" ubuntu
+$ usermod -aG sudo ubuntu
+$ su ubuntu
+
+#SSH ayarları
+$ ls ~/.ssh
+id_rsa  id_rsa.pub
+
+$ ssh-keygen
+$ cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCjw....F8Xv4f/0+7WT miguel@miguelspc
+
+$ echo <paste-your-key-here> >> ~/.ssh/authorized_keys
+$ chmod 600 ~/.ssh/authorized_keys
+
+sudo vi /etc/ssh/sshd_config
+PermitRootLogin no
+PasswordAuthentication no
+$ sudo service ssh restart
+
+#firewall ayarları
+$ sudo apt-get install -y ufw
+$ sudo ufw allow ssh
+$ sudo ufw allow http
+$ sudo ufw allow 443/tcp
+$ sudo ufw --force enable
+$ sudo ufw status
+
+#Gerekli yazılımların kurulumu
+$ sudo apt-get -y update
+$ sudo apt-get -y install python3 python3-venv python3-dev
+$ sudo apt-get -y install mysql-server postfix supervisor nginx git
+
+$ sudo apt-get install nginx
+$ sudo rm /etc/nginx/sites-enabled/default
+$ sudo ln -s /etc/nginx/sites-available/react-flask-app.nginx /etc/nginx/sites-enabled/react-flask-app.nginx
+$ sudo systemctl reload nginx
+(venv) $ pip install gunicorn
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl start react-flask-app
+
+$ echo "export FLASK_APP=microblog.py" >> ~/.profile  login olunduğunda çalışacak script
+
+
+https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deployment-on-linux
+
+https://www.youtube.com/watch?v=qEfduVAQ8FQ&t=140s

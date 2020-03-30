@@ -90,8 +90,7 @@ class Dashboard extends Component {
         <main>
           <Switch>
             <Route exact path="/dashboard/meclis"  component={Meclis} />
-            <Route exact path="/dashboard/menuler" component={MenuList}/>
-            <Route path="*"  component={NotFoundPage}/>         
+            <Route exact path="/dashboard/menuler" component={MenuList}/>        
           </Switch>
         </main>
       </div>
