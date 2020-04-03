@@ -3,9 +3,9 @@
 --
 
 -- Dumped from database version 9.5.19
--- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
 
--- Started on 2020-03-30 17:45:41 +03
+-- Started on 2020-04-02 15:28:32 +03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -19,7 +19,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 2183 (class 1262 OID 16619)
+-- TOC entry 2193 (class 1262 OID 16619)
 -- Name: yettim; Type: DATABASE; Schema: -; Owner: postgres
 --
 
@@ -60,7 +60,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2185 (class 0 OID 0)
+-- TOC entry 2195 (class 0 OID 0)
 -- Dependencies: 4
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -77,7 +77,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2186 (class 0 OID 0)
+-- TOC entry 2196 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
 --
@@ -94,7 +94,7 @@ CREATE EXTENSION IF NOT EXISTS pgjwt WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2187 (class 0 OID 0)
+-- TOC entry 2197 (class 0 OID 0)
 -- Dependencies: 1
 -- Name: EXTENSION pgjwt; Type: COMMENT; Schema: -; Owner: 
 --
@@ -111,7 +111,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2188 (class 0 OID 0)
+-- TOC entry 2198 (class 0 OID 0)
 -- Dependencies: 3
 -- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
 --
@@ -120,7 +120,7 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 
 
 --
--- TOC entry 577 (class 1247 OID 25113)
+-- TOC entry 578 (class 1247 OID 25113)
 -- Name: jwt_token; Type: TYPE; Schema: api; Owner: postgres
 --
 
@@ -132,7 +132,7 @@ CREATE TYPE api.jwt_token AS (
 ALTER TYPE api.jwt_token OWNER TO postgres;
 
 --
--- TOC entry 570 (class 1247 OID 16919)
+-- TOC entry 571 (class 1247 OID 16919)
 -- Name: yetki; Type: TYPE; Schema: api; Owner: postgres
 --
 
@@ -148,7 +148,7 @@ CREATE TYPE api.yetki AS ENUM (
 ALTER TYPE api.yetki OWNER TO postgres;
 
 --
--- TOC entry 203 (class 1255 OID 25118)
+-- TOC entry 204 (class 1255 OID 25118)
 -- Name: login(text, text); Type: FUNCTION; Schema: api; Owner: postgres
 --
 
@@ -188,7 +188,7 @@ $$;
 ALTER FUNCTION api.login(uye text, sifre text) OWNER TO postgres;
 
 --
--- TOC entry 202 (class 1255 OID 25115)
+-- TOC entry 203 (class 1255 OID 25115)
 -- Name: login2(text, text); Type: FUNCTION; Schema: api; Owner: postgres
 --
 
@@ -216,7 +216,7 @@ $$;
 ALTER FUNCTION api.login2(uye text, sifre text) OWNER TO postgres;
 
 --
--- TOC entry 201 (class 1255 OID 16861)
+-- TOC entry 202 (class 1255 OID 16861)
 -- Name: sifrele(); Type: FUNCTION; Schema: api; Owner: postgres
 --
 
@@ -267,6 +267,25 @@ CREATE TABLE api.firma (
 
 
 ALTER TABLE api.firma OWNER TO postgres;
+
+--
+-- TOC entry 189 (class 1259 OID 25119)
+-- Name: masa; Type: TABLE; Schema: api; Owner: postgres
+--
+
+CREATE TABLE api.masa (
+    firma text NOT NULL,
+    bolge text NOT NULL,
+    ad text NOT NULL,
+    sira smallint NOT NULL,
+    no uuid DEFAULT uuid_generate_v4() NOT NULL,
+    gnc_trh timestamp without time zone DEFAULT now() NOT NULL
+);
+
+ALTER TABLE ONLY api.masa FORCE ROW LEVEL SECURITY;
+
+
+ALTER TABLE api.masa OWNER TO postgres;
 
 --
 -- TOC entry 185 (class 1259 OID 16863)
@@ -333,7 +352,7 @@ CREATE TABLE api.uye (
 ALTER TABLE api.uye OWNER TO postgres;
 
 --
--- TOC entry 2174 (class 0 OID 16799)
+-- TOC entry 2183 (class 0 OID 16799)
 -- Dependencies: 184
 -- Data for Name: firma; Type: TABLE DATA; Schema: api; Owner: postgres
 --
@@ -344,7 +363,21 @@ BTY	BEYKOZ TALEBE YURDU	info@bty.com	A	Hikmet Akgün	\N	\N	\N	\N	2020-01-25 15:3
 
 
 --
--- TOC entry 2175 (class 0 OID 16863)
+-- TOC entry 2187 (class 0 OID 25119)
+-- Dependencies: 189
+-- Data for Name: masa; Type: TABLE DATA; Schema: api; Owner: postgres
+--
+
+COPY api.masa (firma, bolge, ad, sira, no, gnc_trh) FROM stdin;
+BTY	Salon	masa1	1	a8e1e26e-f185-4e4b-b1cf-b1cc72e5dbbd	2020-04-01 09:24:25.532642
+BTY	Salon	masa3	2	6de2737e-ad81-4276-adc0-2b614795ee8a	2020-04-01 09:51:57.734277
+BTY	Erkek	masa2	1	0d5034fa-03ca-4330-ad2a-61e311a28bea	2020-04-01 09:52:14.90729
+OTY	Erkek	masa1	1	900246a2-4538-4e9e-aaac-098f7048a2f5	2020-04-01 10:09:01.225791
+\.
+
+
+--
+-- TOC entry 2184 (class 0 OID 16863)
 -- Dependencies: 185
 -- Data for Name: oturum; Type: TABLE DATA; Schema: api; Owner: postgres
 --
@@ -354,7 +387,7 @@ COPY api.oturum (oturum_no, firma, uye, browser, ip, miad) FROM stdin;
 
 
 --
--- TOC entry 2176 (class 0 OID 16899)
+-- TOC entry 2185 (class 0 OID 16899)
 -- Dependencies: 186
 -- Data for Name: urun; Type: TABLE DATA; Schema: api; Owner: postgres
 --
@@ -367,7 +400,7 @@ BTY	Urfa	Urfa Kebap yeme	Kebaplar	15	0	0	0	2020-01-25 17:56:06.881375	2020-01-25
 
 
 --
--- TOC entry 2177 (class 0 OID 16929)
+-- TOC entry 2186 (class 0 OID 16929)
 -- Dependencies: 187
 -- Data for Name: uye; Type: TABLE DATA; Schema: api; Owner: postgres
 --
@@ -378,7 +411,7 @@ BTY	Mehmet	Gülsoy	$2a$06$7jk809euInAnADHI.jH3aOarilr2rKkaAvTk78Gnh.us.k9rbVAHC	
 
 
 --
--- TOC entry 2046 (class 2606 OID 16817)
+-- TOC entry 2053 (class 2606 OID 16817)
 -- Name: firma firma_pkey; Type: CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -387,7 +420,7 @@ ALTER TABLE ONLY api.firma
 
 
 --
--- TOC entry 2048 (class 2606 OID 16873)
+-- TOC entry 2055 (class 2606 OID 16873)
 -- Name: oturum oturum_pkey; Type: CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -396,7 +429,7 @@ ALTER TABLE ONLY api.oturum
 
 
 --
--- TOC entry 2050 (class 2606 OID 16912)
+-- TOC entry 2057 (class 2606 OID 16912)
 -- Name: urun urun_pkey; Type: CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -405,7 +438,7 @@ ALTER TABLE ONLY api.urun
 
 
 --
--- TOC entry 2052 (class 2606 OID 16948)
+-- TOC entry 2059 (class 2606 OID 16948)
 -- Name: uye uye_eposta_key; Type: CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -414,7 +447,7 @@ ALTER TABLE ONLY api.uye
 
 
 --
--- TOC entry 2054 (class 2606 OID 16944)
+-- TOC entry 2061 (class 2606 OID 16944)
 -- Name: uye uye_pkey; Type: CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -423,7 +456,7 @@ ALTER TABLE ONLY api.uye
 
 
 --
--- TOC entry 2056 (class 2606 OID 16946)
+-- TOC entry 2063 (class 2606 OID 16946)
 -- Name: uye uye_telefon_key; Type: CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -432,7 +465,7 @@ ALTER TABLE ONLY api.uye
 
 
 --
--- TOC entry 2059 (class 2620 OID 16954)
+-- TOC entry 2066 (class 2620 OID 16954)
 -- Name: uye sifrele; Type: TRIGGER; Schema: api; Owner: postgres
 --
 
@@ -440,7 +473,7 @@ CREATE TRIGGER sifrele BEFORE INSERT OR UPDATE ON api.uye FOR EACH ROW EXECUTE P
 
 
 --
--- TOC entry 2057 (class 2606 OID 16913)
+-- TOC entry 2064 (class 2606 OID 16913)
 -- Name: urun urun_firma_fkey; Type: FK CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -449,7 +482,7 @@ ALTER TABLE ONLY api.urun
 
 
 --
--- TOC entry 2058 (class 2606 OID 16949)
+-- TOC entry 2065 (class 2606 OID 16949)
 -- Name: uye uye_firma_fkey; Type: FK CONSTRAINT; Schema: api; Owner: postgres
 --
 
@@ -458,7 +491,23 @@ ALTER TABLE ONLY api.uye
 
 
 --
--- TOC entry 2184 (class 0 OID 0)
+-- TOC entry 2181 (class 0 OID 25119)
+-- Dependencies: 189
+-- Name: masa; Type: ROW SECURITY; Schema: api; Owner: postgres
+--
+
+ALTER TABLE api.masa ENABLE ROW LEVEL SECURITY;
+
+--
+-- TOC entry 2182 (class 3256 OID 25127)
+-- Name: masa masa_policy; Type: POLICY; Schema: api; Owner: postgres
+--
+
+CREATE POLICY masa_policy ON api.masa USING ((firma = current_setting('request.jwt.claim.firma'::text))) WITH CHECK ((firma = current_setting('request.jwt.claim.firma'::text)));
+
+
+--
+-- TOC entry 2194 (class 0 OID 0)
 -- Dependencies: 10
 -- Name: SCHEMA api; Type: ACL; Schema: -; Owner: postgres
 --
@@ -470,8 +519,8 @@ GRANT USAGE ON SCHEMA api TO yettim_web_user;
 
 
 --
--- TOC entry 2189 (class 0 OID 0)
--- Dependencies: 203
+-- TOC entry 2199 (class 0 OID 0)
+-- Dependencies: 204
 -- Name: FUNCTION login(uye text, sifre text); Type: ACL; Schema: api; Owner: postgres
 --
 
@@ -483,7 +532,7 @@ GRANT ALL ON FUNCTION api.login(uye text, sifre text) TO web_anon;
 
 
 --
--- TOC entry 2190 (class 0 OID 0)
+-- TOC entry 2200 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: TABLE firma; Type: ACL; Schema: api; Owner: postgres
 --
@@ -495,7 +544,19 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE api.firma TO yettim_web_user;
 
 
 --
--- TOC entry 2191 (class 0 OID 0)
+-- TOC entry 2201 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: TABLE masa; Type: ACL; Schema: api; Owner: postgres
+--
+
+REVOKE ALL ON TABLE api.masa FROM PUBLIC;
+REVOKE ALL ON TABLE api.masa FROM postgres;
+GRANT ALL ON TABLE api.masa TO postgres;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE api.masa TO yettim_web_user;
+
+
+--
+-- TOC entry 2202 (class 0 OID 0)
 -- Dependencies: 185
 -- Name: TABLE oturum; Type: ACL; Schema: api; Owner: postgres
 --
@@ -507,7 +568,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE api.oturum TO yettim_web_user;
 
 
 --
--- TOC entry 2192 (class 0 OID 0)
+-- TOC entry 2203 (class 0 OID 0)
 -- Dependencies: 186
 -- Name: TABLE urun; Type: ACL; Schema: api; Owner: postgres
 --
@@ -519,7 +580,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE api.urun TO yettim_web_user;
 
 
 --
--- TOC entry 2193 (class 0 OID 0)
+-- TOC entry 2204 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: TABLE uye; Type: ACL; Schema: api; Owner: postgres
 --
@@ -530,7 +591,7 @@ GRANT ALL ON TABLE api.uye TO postgres;
 GRANT SELECT,INSERT,UPDATE ON TABLE api.uye TO yettim_web_user;
 
 
--- Completed on 2020-03-30 17:45:42 +03
+-- Completed on 2020-04-02 15:28:32 +03
 
 --
 -- PostgreSQL database dump complete

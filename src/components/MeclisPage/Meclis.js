@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   Icon,
   Button,
@@ -10,8 +12,9 @@ import {
 import styles from "./style.module.css";
 import classNames from "classnames";
 import * as data from "../data";
+import * as masa_reducer from "../../reducers/masa";
+import * as static_actions from "../../actions/static_data";
 
-let masalar = data.masalar;
 let bolgeler = data.bolgeler;
 let garsonlar = data.garsonlar;
 
@@ -90,6 +93,10 @@ class Meslic extends Component {
     modalOpen: false
   };
 
+  componentDidMount() {
+    this.props.static_actions.masaGetir();
+  }
+
   open_dialog = () => this.setState({ confirm_dlg_open: true });
   close_dialog = () => this.setState({ confirm_dlg_open: false });
   handleModalOpen = () => this.setState({ modalOpen: true });
@@ -111,7 +118,9 @@ class Meslic extends Component {
   };
 
   masa_sil = id => {
-    masalar = masalar.filter(masa => masa.ad !== id);
+    const { masalar } = this.state;
+    const filtered_masa = masalar.filter(masa => masa.ad !== id);
+    this.setState({ masalar: filtered_masa });
     this.close_dialog();
   };
 
@@ -145,9 +154,11 @@ class Meslic extends Component {
       secilen_elemen,
       secilen_bolge_elem,
       selected_section,
-      sil_fn
+      sil_fn,
+      modalOpen
     } = this.state;
-    const { modalOpen } = this.state;
+
+    const { masalar } = this.props;
 
     let selected_section_str = "";
     if (selected_section === "masa") {
@@ -225,7 +236,7 @@ class Meslic extends Component {
           {masalar
             .filter(masa => masa.bolge === secilen_bolge_elem)
             .map(masa => (
-              <div key={masa.id} onClick={this.handleMasaClick}>
+              <div key={masa.no} onClick={this.handleMasaClick}>
                 {masa.ad}
               </div>
             ))}
@@ -234,4 +245,13 @@ class Meslic extends Component {
     );
   }
 }
-export default Meslic;
+
+const mapStateToProps = state => ({
+  masalar: masa_reducer.getMasa(state.static_data.masa)
+});
+
+const mapDispatchToProps = dispatch => ({
+  static_actions: bindActionCreators(static_actions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Meslic);
