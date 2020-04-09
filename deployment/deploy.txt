@@ -52,3 +52,7 @@ https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvii-deploymen
 https://www.youtube.com/watch?v=qEfduVAQ8FQ&t=140s
 
 https://youtu.be/ZowYk0ugXTg
+
+
+
+

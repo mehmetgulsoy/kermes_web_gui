@@ -1,0 +1,59 @@
+#Türkeçe Postgresql İçin
+CREATE DATABASE test_db ENCODING='UTF-8' LC_COLLATE='tr_TR.UTF-8' TEMPLATE=template0;
+ELECT * FROM pg_collation;
+
+# Mevcut paketleri listeliyoruz.
+locale -a
+
+# Yukarıdaki listede tr_TR veya tr_TR.UTF-8 yoksa ekliyoruz.
+sudo locale-gen tr_TR
+sudo locale-gen tr_TR.UTF-8
+
+# Son olarak güncelleme yapıyoruz.
+sudo update-locale
+
+create collation "tr_TR.UTF-8" (LOCALE="tr_TR.UTF-8");
+
+# Postgresql Silme 
+
+Option A
+If your install isn't already damaged, you can drop unwanted PostgreSQL servers ("clusters") using pg_dropcluster. 
+Use that in preference to a full purge and reinstall if you just want to restart with a fresh PostgreSQL instance.
+$ pg_lsclusters
+Ver Cluster Port Status Owner    Data directory              Log file
+11  main    5432 online postgres /var/lib/postgresql/11/main /var/log/postgresql/postgresql-11-main.log
+$ sudo systemctl stop postgresql@11-main
+$ sudo pg_dropcluster --stop 11 main
+$ sudo pg_createcluster --start 11 main
+
+Option B
+If you really need to do a full purge and reinstall, first make sure PostgreSQL isn't running. ps -C postgres should show no results.
+apt-get --purge remove postgresql\*
+rm -r /etc/postgresql/
+rm -r /etc/postgresql-common/
+rm -r /var/lib/postgresql/
+userdel -r postgres
+groupdel postgres
+apt-get install postgresql -> sadece servers
+apt-get install postgresql-8.4 postgresql-contrib-8.4 postgresql-doc-8.4 -> veya komple kurulum
+
+#The query below lists objects with owners. For all privileges we actually need more.
+--r = ordinary table, i = index, S = sequence, v = view, m = materialized view, c = composite type, t = TOAST table, f = foreign table
+SELECT 
+    n.nspname AS schema_name,
+    c.relname AS rel_name,
+    c.relkind AS rel_kind,
+    pg_get_userbyid(c.relowner) AS owner_name
+  FROM pg_class c
+  JOIN pg_namespace n ON n.oid = c.relnamespace
+
+UNION ALL
+
+-- functions (or procedures)
+SELECT
+    n.nspname AS schema_name,
+    p.proname,
+    'p',
+    pg_get_userbyid(p.proowner)
+  FROM pg_proc p
+  JOIN pg_namespace n ON n.oid = p.pronamespace

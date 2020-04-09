@@ -7,25 +7,29 @@ import {
   Modal,
   Form,
   Confirm,
-  Dropdown
+  Dropdown,
 } from "semantic-ui-react";
 import styles from "./style.module.css";
 import classNames from "classnames";
 import * as data from "../data";
 import * as masa_reducer from "../../reducers/masa";
+import * as bolge_reducer from "../../reducers/bolge";
 import * as static_actions from "../../actions/static_data";
 
-let bolgeler = data.bolgeler;
 let garsonlar = data.garsonlar;
 
 class BolgeModal extends Component {
-  state = {};
+  state = {
+    bolge_adi: "",
+  };
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
+
   handleSubmit = () => console.log(this.state);
 
   render() {
     const { open, header, close_fn, kaydet_fn } = this.props;
-    const { masa_adi } = this.state;
+    const { bolge_adi, garson, masa_adeti } = this.state;
+
     return (
       <Modal open={open} size="tiny" closeOnEscape={true} onClose={close_fn}>
         <Modal.Header>{header}</Modal.Header>
@@ -35,10 +39,11 @@ class BolgeModal extends Component {
               <Form.Field>
                 <Form.Input
                   required
-                  label="Masa Adı"
-                  placeholder="Masa Adı..."
+                  label="Bölge Adı"
+                  placeholder="Bölge Adı..."
                   onChange={this.handleChange}
-                  name="masa_adi"
+                  name="bolge_adi"
+                  value={bolge_adi}
                 />
               </Form.Field>
               <Form.Field>
@@ -46,10 +51,12 @@ class BolgeModal extends Component {
                 <Dropdown
                   label="Garson"
                   placeholder="Garson Seçiniz..."
+                  name="garson"
                   multiple
                   search
                   selection
                   noResultsMessage="Kayıt bulunamadı"
+                  onChange={this.handleChange}
                   options={garsonlar}
                 />
               </Form.Field>
@@ -61,6 +68,7 @@ class BolgeModal extends Component {
                   placeholder="Masa Adeti..."
                   onChange={this.handleChange}
                   name="masa_adeti"
+                  value={parseInt(masa_adeti)}
                 />
               </Form.Field>
             </Form>
@@ -75,7 +83,8 @@ class BolgeModal extends Component {
             icon="checkmark"
             labelPosition="right"
             content="Kaydet"
-            onClick={() => kaydet_fn(masa_adi)}
+            disabled={bolge_adi === ""}
+            onClick={() => kaydet_fn({ bolge: bolge_adi, garson })}
           />
         </Modal.Actions>
       </Modal>
@@ -90,52 +99,52 @@ class Meslic extends Component {
     selected_section: "", // bölge veya masa
     confirm_dlg_open: false,
     sil_fn: null,
-    modalOpen: false
+    modalOpen: false,
   };
 
   componentDidMount() {
     this.props.static_actions.masaGetir();
+    this.props.static_actions.bolgeGetir();
   }
 
   open_dialog = () => this.setState({ confirm_dlg_open: true });
   close_dialog = () => this.setState({ confirm_dlg_open: false });
   handleModalOpen = () => this.setState({ modalOpen: true });
   handleModalClose = () => this.setState({ modalOpen: false });
-  handleSectionClick = e =>
+  handleSectionClick = (e) =>
     this.setState({ selected_section: e.currentTarget.id });
 
-  handleBolgeClick = e => {
+  handleBolgeClick = (e) => {
     this.setState({
       secilen_elemen: e.target.innerHTML,
-      secilen_bolge_elem: e.target.innerHTML
+      secilen_bolge_elem: e.target.innerHTML,
     });
   };
 
-  handleMasaClick = e => {
+  handleMasaClick = (e) => {
     this.setState({
-      secilen_elemen: e.target.innerHTML
+      secilen_elemen: e.target.innerHTML,
     });
   };
 
-  masa_sil = id => {
+  masa_sil = (id) => {
     const { masalar } = this.state;
-    const filtered_masa = masalar.filter(masa => masa.ad !== id);
+    const filtered_masa = masalar.filter((masa) => masa.ad !== id);
     this.setState({ masalar: filtered_masa });
     this.close_dialog();
   };
 
-  bolge_sil = id => {
-    const blg = bolgeler.filter(bolge => bolge.ad !== id);
-    bolgeler = blg;
+  bolge_sil = (id) => {
+    this.props.static_actions.bolgeSil(id);
     this.close_dialog();
   };
 
-  bolge_ekle = bolge => {
-    bolgeler.push({ id: bolgeler.length + 2, ad: bolge });
+  bolge_ekle = (bolge) => {
+    this.props.static_actions.bolgeEkle(bolge);
     this.handleModalClose();
   };
 
-  handleSilClick = e => {
+  handleSilClick = (e) => {
     const { secilen_elemen, selected_section } = this.state;
     if (secilen_elemen === "") {
       alert("Lütfen Silinecek eleman seçiniz!");
@@ -155,10 +164,10 @@ class Meslic extends Component {
       secilen_bolge_elem,
       selected_section,
       sil_fn,
-      modalOpen
+      modalOpen,
     } = this.state;
 
-    const { masalar } = this.props;
+    const { masalar, bolgeler } = this.props;
 
     let selected_section_str = "";
     if (selected_section === "masa") {
@@ -204,24 +213,25 @@ class Meslic extends Component {
             {selected_section_str} Sil
           </div>
         </header>
+
         <section
           id="bolge"
           className={classNames({
             [styles.bolge]: true,
-            [styles.selected_section]: selected_section === "bolge"
+            [styles.selected_section]: selected_section === "bolge",
           })}
           onClick={this.handleSectionClick}
         >
-          {bolgeler.map(bolge => (
+          {bolgeler.map((bolge) => (
             <div
-              key={bolge.id}
+              key={bolge.bolge}
               className={classNames({
-                [styles.selected]: secilen_bolge_elem === bolge.ad,
-                [styles.selected_section]: secilen_elemen === bolge.ad
+                [styles.selected]: secilen_bolge_elem === bolge.bolge,
+                [styles.selected_section]: secilen_elemen === bolge.bolge,
               })}
               onClick={this.handleBolgeClick}
             >
-              {bolge.ad}
+              {bolge.bolge}
             </div>
           ))}
         </section>
@@ -229,14 +239,14 @@ class Meslic extends Component {
           id="masa"
           className={classNames({
             [styles.masa]: true,
-            [styles.selected_section]: selected_section === "masa"
+            [styles.selected_section]: selected_section === "masa",
           })}
           onClick={this.handleSectionClick}
         >
           {masalar
-            .filter(masa => masa.bolge === secilen_bolge_elem)
-            .map(masa => (
-              <div key={masa.no} onClick={this.handleMasaClick}>
+            .filter((masa) => masa.bolge === secilen_bolge_elem)
+            .map((masa) => (
+              <div key={masa.bolge} onClick={this.handleMasaClick}>
                 {masa.ad}
               </div>
             ))}
@@ -246,12 +256,13 @@ class Meslic extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  masalar: masa_reducer.getMasa(state.static_data.masa)
+const mapStateToProps = (state) => ({
+  masalar: masa_reducer.getMasa(state.static_data.masa),
+  bolgeler: bolge_reducer.getBolge(state.static_data.bolge),
 });
 
-const mapDispatchToProps = dispatch => ({
-  static_actions: bindActionCreators(static_actions, dispatch)
+const mapDispatchToProps = (dispatch) => ({
+  static_actions: bindActionCreators(static_actions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Meslic);

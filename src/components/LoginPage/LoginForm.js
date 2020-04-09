@@ -9,7 +9,7 @@ import {
   Header,
   Message,
   Segment,
-  Icon
+  Icon,
 } from "semantic-ui-react";
 
 import * as auth from "../../actions/auth";
@@ -19,10 +19,10 @@ import styles from "./login.module.css";
 
 class LoginForm extends Component {
   state = {
-    uye: "",
-    sifre: "",
+    uye: "Mehmet@BTY",
+    sifre: "31414819674",
     formErrors: {},
-    isLoading: false
+    isLoading: false,
   };
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
@@ -102,17 +102,17 @@ class LoginForm extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isAuthenticated: authReducers.getisAuthenticated(state.auth),
   userName: authReducers.getUserName(state.auth),
   res_error: authReducers.getError(state.auth),
-  res_msg: authReducers.getMsg(state.auth)
+  res_msg: authReducers.getMsg(state.auth),
 });
 
-const mapDispatchToProps = dispatch => ({
-  push: path => dispatch(push(path)),
+const mapDispatchToProps = (dispatch) => ({
+  push: (path) => dispatch(push(path)),
   //actions: bindActionCreators(actions, dispatch),
-  auth: bindActionCreators(auth, dispatch)
+  auth: bindActionCreators(auth, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
