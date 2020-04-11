@@ -5,7 +5,7 @@ import auth_reducers from "./auth";
 import responce_reducers from "./responce";
 import masa_reducers from "./masa";
 import bolge_reducers from "./bolge";
-
+import urun_reducers from "./urun";
 const rootReducer = (history) =>
   combineReducers({
     router: connectRouter(history),
@@ -15,6 +15,7 @@ const rootReducer = (history) =>
     static_data: combineReducers({
       masa: masa_reducers,
       bolge: bolge_reducers,
+      urun: urun_reducers,
     }),
   });
 

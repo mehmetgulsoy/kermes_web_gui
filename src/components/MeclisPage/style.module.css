@@ -7,8 +7,13 @@
   grid-template-columns: auto auto 1fr auto auto auto;
 }
 
+.header_logo {
+  padding: 0.5em;
+  border-radius: 0.5em;
+}
 
-.header > div {
+
+.header_button {
   padding: 0.5em;
   border: 1px solid #A0AEC0;
   border-radius: 0.5em;
@@ -23,7 +28,7 @@
   border-radius: 3px;
 }
 
-.bolge > * {
+.bolge>* {
   background-color: #CBD5E0;
   border-radius: 3px;
   margin: 0.5em;
@@ -47,7 +52,7 @@
   border: 2px solid #BEE3F8;
 }
 
-.masa > * {
+.masa>* {
   background-color: #CBD5E0;
   border-radius: 3px;
   margin: 0.5em;

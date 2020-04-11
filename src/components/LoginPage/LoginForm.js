@@ -46,7 +46,7 @@ class LoginForm extends Component {
   };
 
   render() {
-    const { formErrors, isLoading } = this.state;
+    const { formErrors, isLoading, uye, sifre } = this.state;
     const { res_error, res_msg } = this.props;
     return (
       <div className={styles.loginForm}>
@@ -70,6 +70,7 @@ class LoginForm extends Component {
               placeholder="uye@firma"
               pointing="right"
               name="uye"
+              value={uye}
               error={formErrors.uye}
               onChange={this.handleChange}
             />
@@ -81,6 +82,7 @@ class LoginForm extends Component {
               placeholder="Şifre"
               type="password"
               name="sifre"
+              value={sifre}
               error={formErrors.sifre}
               onChange={this.handleChange}
             />
@@ -116,3 +118,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+
+// TODO Bölge Düzenle ve masa işlemlerine devam edilecek

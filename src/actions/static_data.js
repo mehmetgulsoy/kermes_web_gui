@@ -57,6 +57,10 @@ export const bolgeSil = (data) => async (dispatch, getState) => {
   });
 };
 
+export const masaEkle = (data) => async (dispatch, getState) => {
+  dispatch({ type: types.INS_MASA_BEGIN });
+};
+
 export const masaGetir = () => async (dispatch, getState) => {
   dispatch({ type: types.FETCH_MASA_BEGIN });
   const response = await getData("api/masa");
@@ -74,14 +78,41 @@ export const masaGetir = () => async (dispatch, getState) => {
   });
 };
 
-export const masaEkle = (data) => async (dispatch, getState) => {
-  dispatch({ type: types.INS_MASA_BEGIN });
-};
-
 export const masaSil = (data) => async (dispatch, getState) => {
   dispatch({ type: types.INS_MASA_BEGIN });
 };
 
 export const masaGuncelle = (data) => async (dispatch, getState) => {
   dispatch({ type: types.INS_MASA_BEGIN });
+};
+
+export const urun_ekle = (data) => async (dispatch, getState) => {
+  dispatch({ type: types.INS_URUN_BEGIN });
+};
+
+export const urun_getir = () => async (dispatch, getState) => {
+  dispatch({ type: types.FETCH_URUN_BEGIN });
+  const response = await getData(
+    "api/urun?select=no,urun,aciklama,katagori,fiyat,miktar,gnc_trh"
+  );
+
+  if (!response.ok) {
+    dispatch({ type: types.FETCH_URUN_FAIL });
+    throw new Error("Network operasyonu başarisiz. " + response.statusText);
+  }
+
+  const result = await response.json();
+
+  dispatch({
+    type: types.FETCH_URUN_SUCCESS,
+    urun: result,
+  });
+};
+
+export const urunSil = (data) => async (dispatch, getState) => {
+  dispatch({ type: types.INS_URUN_BEGIN });
+};
+
+export const urunGuncelle = (data) => async (dispatch, getState) => {
+  dispatch({ type: types.INS_URUN_BEGIN });
 };

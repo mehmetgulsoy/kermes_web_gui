@@ -1,0 +1,18 @@
+.header {
+  margin-bottom: 1em;
+  background-color: #F7FAFC;
+  padding: 0.5em;
+
+}
+
+.header_logo {
+  padding: 0.5em;
+  border-radius: 0.5em;
+}
+
+
+.header_button {
+  padding: 0.5em;
+  border: 1px solid #A0AEC0;
+  border-radius: 0.5em;
+}

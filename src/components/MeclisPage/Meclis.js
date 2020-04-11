@@ -193,22 +193,22 @@ class Meslic extends Component {
           kaydet_fn={this.bolge_ekle}
         />
         <header className={styles.header}>
-          <div>
+          <div className={styles.header_logo}>
             <Icon size="large" name="chess board" />
             <b> Bölge/Masa</b>
           </div>
           <b></b>
           <b></b>
-          <div>
+          <div className={styles.header_button}>
             <Icon name="edit" />
             {selected_section_str} Güncelle
           </div>
-          <div onClick={this.handleModalOpen}>
+          <div className={styles.header_button} onClick={this.handleModalOpen}>
             <Icon name="plus" />
             {selected_section_str} ekle
           </div>
 
-          <div onClick={this.handleSilClick}>
+          <div className={styles.header_button} onClick={this.handleSilClick}>
             <Icon name="trash alternate" />
             {selected_section_str} Sil
           </div>
