@@ -1,0 +1,4 @@
+$ vagrant package
+$ vagrant box add package.box --name <yourappname>_box
+$ vagrant init <yourappname>_box
+$ vagrant up
