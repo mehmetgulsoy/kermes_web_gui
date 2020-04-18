@@ -26,7 +26,8 @@ export const socket = {};
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = apiUrl;
 
-function configureStore(initialState) {
+export default function configureStore(initialState) {
+  
   const reactRouterMiddleware = routerMiddleware(history);
   const middlewares = [
     // Add other middleware on this line...
@@ -41,13 +42,18 @@ function configureStore(initialState) {
     composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // add support for Redux dev tools
   }
 
-  return createStore(
+  const store = createStore(
     createRootReducer(history), // root reducer with router state
     initialState,
     composeEnhancers(applyMiddleware(...middlewares))
   );
-}
 
-export default configureStore;
+  if (process.env.NODE_ENV !== 'production' && module.hot) {
+    module.hot.accept('./reducers', () => store.replaceReducer(createRootReducer(history)))
+  }
+
+  return store
+}
+ 
 
 //https://github.com/coryhouse/react-slingshot starter kit ile yapıldı.

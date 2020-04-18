@@ -97,7 +97,7 @@ class LoginForm extends Component {
           </Segment>
         </Form>
         <Message style={{ textAlign: "justify" }}>
-          <Link to="/"> Şifremi unuttum </Link>
+          <Link to="/"> Şifremi unuttum! </Link>
         </Message>
       </div>
     );

@@ -27,7 +27,7 @@ class MenuList extends Component {
         <header className={styles.header}>
           <div className={styles.header_logo}>
             <Icon size="large" name="options" />
-            <b> Menu</b>
+            <b> Menu </b>
           </div>
         </header>
         <section>
