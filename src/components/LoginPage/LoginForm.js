@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom"; 
 import {
   Button,
@@ -18,13 +18,13 @@ export default function LoginForm(props)
   const [uye, set_uye] = useState("Mehmet@BTY");
   const [sifre, set_sifre] = useState("31414819674");
   const [formErrors, set_formErrors] = useState({});
-  const [isLoading, set_isLoading] = useState(false);
-  const error_message = useSelector(state => state.auth.msg);
-  const res_error      =useSelector(state => state.auth.error);
+  const [isLoading, set_isLoading] = useState(false);  
+  const [error, set_error]      =useState(false);
   const dispatch =  useDispatch()
   
   const handleSubmit = () => {    
     let errors = {};
+    set_error("");
     set_isLoading(true)
     if (!uye) errors.uye = msg.REQUIRED_FIELD_MSG;
     else if (!uye.includes("@")) errors.uye = msg.UYE_FIELD_MSG;
@@ -33,14 +33,16 @@ export default function LoginForm(props)
 
     set_formErrors({ formErrors: errors });
 
-    if (Object.entries(errors).length !== 0) {
-      console.log("hata: ", errors);
+    if (Object.entries(errors).length !== 0) {       
       set_isLoading(false)
       return;
     }        
     dispatch(auth.login({ uye, sifre }))
-    .then(() => {
+    .then((res) => {
       set_isLoading(false);
+      if (res.error === true){
+        set_error(res.msg);       
+      }      
     });
   };     
      
@@ -49,13 +51,12 @@ export default function LoginForm(props)
       <Header as="h2">
         <Icon name="coffee" size="big" /> Üye Girişi
       </Header>
-
-      <Form error={res_error} onSubmit={handleSubmit}>
+      <Form error={error.length > 0} onSubmit={handleSubmit}>
         <Segment stacked>
           <Message
             error
             header="Hata Oluştu!"
-            content={error_message}         
+            content={error}         
           />
           <Form.Input
             fluid
@@ -84,8 +85,7 @@ export default function LoginForm(props)
           <Button
             primary
             fluid
-            size="large"
-            //loading={isLoading && props.res_msg === ""}
+            size="large"       
             loading={isLoading}
           >
             Giriş

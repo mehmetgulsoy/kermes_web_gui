@@ -14,7 +14,7 @@ export async function postData(url = "", data = {}) {
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
   //return await response.json(); // parses JSON response into native JavaScript objects
-  return await response;
+  return response;
 }
 
 export async function getData(url = "") {
