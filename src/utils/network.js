@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as URLs from "../constants/URLs";
 
 export const checkOnline = () => {
-  return axios.get(URLs.PING_URL) 
+  return fetch(URLs.PING_URL) 
     .then(()=> true)
     .catch(()=> true);  
 } 

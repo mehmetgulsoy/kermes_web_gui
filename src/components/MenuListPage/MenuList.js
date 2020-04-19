@@ -6,7 +6,7 @@ import { Icon, Search } from "semantic-ui-react";
 import styles from "./menu.module.css";
 import * as urun_reducer from "../../reducers/urun";
 import * as static_actions from "../../actions/static_data";
-import classNames from "classnames";
+//import classNames from "classnames";
 
 class MenuList extends Component {
   state = {};
@@ -21,7 +21,7 @@ class MenuList extends Component {
   };
 
   render() {
-    const selam = _.deburr("â déjà vu İŞĞÖÇ I");
+    //const selam = _.deburr("â déjà vu İŞĞÖÇ I");
     return (
       <div>
         <header className={styles.header}>

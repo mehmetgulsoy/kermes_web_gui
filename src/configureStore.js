@@ -1,30 +1,17 @@
 import { createStore, compose, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { createBrowserHistory } from "history";
-import io from "socket.io-client";
-import axios from "axios";
+//import io from "socket.io-client"; 
 import { routerMiddleware } from "connected-react-router";
 import createRootReducer from "./reducers";
-import { apiUrl } from "./constants/URLs";
+//import { apiUrl } from "./constants/URLs";
 
-// eslint-disable-next-line
-const checkNetworkConnection = store => next => action => {
-  if (action.networkAction) {
-    axios
-      .get("http://ipv4.icanhazip.com/", { timeout: 5000 })
-      .then(() => next(action))
-      .catch(() => alert("Lütfen Ağ Bağlantınızı Kontrol Ediniz!"));
-  } else {
-    next(action);
-  }
-};
+
 
 export const history = createBrowserHistory();
 //export const socket = io(apiUrl);
 export const socket = {};
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = apiUrl;
 
 export default function configureStore(initialState) {
   
@@ -32,7 +19,7 @@ export default function configureStore(initialState) {
   const middlewares = [
     // Add other middleware on this line...
     //checkNetworkConnection,
-    thunk.withExtraArgument({ axios, socket }),
+    thunk.withExtraArgument({ socket }),
     reactRouterMiddleware
   ];
 

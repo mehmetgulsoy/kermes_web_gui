@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import { Menu, Icon  } from "semantic-ui-react";
-import NotFoundPage from "../../components/NotFoundPage";
 import Meclis from "../MeclisPage/Meclis";
 import MenuList from "../MenuListPage/MenuList";
-import CustomerPage from "../CustomerPage";
+
 import styles from "./style.module.css";
 
 class Dashboard extends Component {
@@ -32,7 +31,7 @@ class Dashboard extends Component {
   );
 
   render() {
-    const { activeItem, hideClass } = this.state;
+    const { hideClass } = this.state;
 
     return (
       <div className={styles.dashboard}>

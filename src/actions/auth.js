@@ -33,4 +33,4 @@ export const login = (data) => (dispatch, getState) => {
     });
 };
 
-export const logOut = () => (dispatch, getState, { axios, socket }) => {};
+export const logOut = () => (dispatch, getState, { socket }) => {};
