@@ -1,6 +1,5 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { Component, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Icon,
   Button,
@@ -11,12 +10,11 @@ import {
 } from "semantic-ui-react";
 import styles from "./style.module.css";
 import classNames from "classnames";
-import * as data from "../data";
-import * as masa_reducer from "../../reducers/masa";
-import * as bolge_reducer from "../../reducers/bolge";
-import * as static_actions from "../../actions/static_data";
+// import * as masa_reducer from "../../reducers/masa";
+// import * as bolge_reducer from "../../reducers/bolge";
+// import * as static_actions from "../../actions/static_data";
 
-let garsonlar = data.garsonlar;
+let garsonlar = [];
 
 class BolgeModal extends Component {
   state = {
@@ -92,177 +90,147 @@ class BolgeModal extends Component {
   }
 }
 
-class Meslic extends Component {
-  state = {
-    secilen_elemen: "", // aktif masa veya bölge
-    secilen_bolge_elem: "", // seçilem bölge elemanın
-    selected_section: "", // bölge veya masa
-    confirm_dlg_open: false,
-    sil_fn: null,
-    modalOpen: false,
+function Meslic(props) {
+  const [secilen_elemen, set_secilen_elemen] = useState(""); // aktif masa veya bölge
+  const [secilen_bolge_elem, set_secilen_bolge_elem] = useState(""); // seçilem bölge elemanın
+  const [selected_section, set_selected_section] = useState(""); // bölge veya masa
+  const [confirm_dlg_open, set_confirm_dlg_open] = useState(false);
+  const [sil_fn, set_sil_fn] = useState(null);
+  const [modalOpen, set_modalOpen] = useState(false);
+  const masalar = useSelector((state) => state.static_data.masa);
+  const bolgeler = useSelector((state) => state.static_data.bolge);
+
+  // componentDidMount() {
+  //   this.props.static_actions.masaGetir();
+  //   this.props.static_actions.bolgeGetir();
+  // }
+
+  const open_dialog = () => set_confirm_dlg_open(true);
+  const close_dialog = () => set_confirm_dlg_open(false);
+  const handleModalOpen = () => set_modalOpen(true);
+  const handleModalClose = () => set_modalOpen(false);
+  const handleSectionClick = (e) => set_selected_section(e.currentTarget.id);
+
+  const handleBolgeClick = (e) => {
+    set_secilen_elemen(e.target.innerHTML);
+    set_secilen_bolge_elem(e.target.innerHTML);
+  };
+  const handleMasaClick = (e) => set_secilen_elemen(e.target.innerHTML);
+
+  const masa_sil = (id) => {
+    // TODO
+    close_dialog();
   };
 
-  componentDidMount() {
-    this.props.static_actions.masaGetir();
-    this.props.static_actions.bolgeGetir();
-  }
-
-  open_dialog = () => this.setState({ confirm_dlg_open: true });
-  close_dialog = () => this.setState({ confirm_dlg_open: false });
-  handleModalOpen = () => this.setState({ modalOpen: true });
-  handleModalClose = () => this.setState({ modalOpen: false });
-  handleSectionClick = (e) =>
-    this.setState({ selected_section: e.currentTarget.id });
-
-  handleBolgeClick = (e) => {
-    this.setState({
-      secilen_elemen: e.target.innerHTML,
-      secilen_bolge_elem: e.target.innerHTML,
-    });
+  const bolge_sil = (id) => {
+    // TODO  this.props.static_actions.bolgeSil(id);
+    close_dialog();
   };
 
-  handleMasaClick = (e) => {
-    this.setState({
-      secilen_elemen: e.target.innerHTML,
-    });
+  const bolge_ekle = (bolge) => {
+    // TODO  this.props.static_actions.bolgeEkle(bolge);
+    handleModalClose();
   };
 
-  masa_sil = (id) => {
-    const { masalar } = this.state;
-    const filtered_masa = masalar.filter((masa) => masa.ad !== id);
-    this.setState({ masalar: filtered_masa });
-    this.close_dialog();
-  };
-
-  bolge_sil = (id) => {
-    this.props.static_actions.bolgeSil(id);
-    this.close_dialog();
-  };
-
-  bolge_ekle = (bolge) => {
-    this.props.static_actions.bolgeEkle(bolge);
-    this.handleModalClose();
-  };
-
-  handleSilClick = (e) => {
-    const { secilen_elemen, selected_section } = this.state;
+  const handleSilClick = (e) => {
     if (secilen_elemen === "") {
       alert("Lütfen Silinecek eleman seçiniz!");
       return;
     }
     if (selected_section === "masa") {
-      this.setState({ sil_fn: () => this.masa_sil(secilen_elemen) });
+      set_sil_fn(() => masa_sil(secilen_elemen));
     } else if (selected_section === "bolge") {
-      this.setState({ sil_fn: () => this.bolge_sil(secilen_elemen) });
+      set_sil_fn(() => bolge_sil(secilen_elemen));
     }
-    this.open_dialog();
+    open_dialog();
   };
 
-  render() {
-    const {
-      secilen_elemen,
-      secilen_bolge_elem,
-      selected_section,
-      sil_fn,
-      modalOpen,
-    } = this.state;
+  let selected_section_str = "";
+  if (selected_section === "masa") {
+    selected_section_str = "Masa";
+  } else if (selected_section === "bolge") {
+    selected_section_str = "Bölge";
+  }
 
-    const { masalar, bolgeler } = this.props;
+  return (
+    <div>
+      <Confirm
+        content="Emin misin?"
+        onConfirm={sil_fn}
+        open={confirm_dlg_open}
+        onCancel={close_dialog}
+        cancelButton="İptal"
+        confirmButton="Tamam"
+      />
+      <BolgeModal
+        open={modalOpen}
+        header="Masa Ekle"
+        close_fn={handleModalClose}
+        kaydet_fn={bolge_ekle}
+      />
+      <header className={styles.header}>
+        <div className={styles.header_logo}>
+          <Icon size="large" name="chess board" />
+          <b> Bölge/Masa</b>
+        </div>
+        <b></b>
+        <b></b>
+        <div className={styles.header_button}>
+          <Icon name="edit" />
+          {selected_section_str} Güncelle
+        </div>
+        <div className={styles.header_button} onClick={handleModalOpen}>
+          <Icon name="plus" />
+          {selected_section_str} ekle
+        </div>
 
-    let selected_section_str = "";
-    if (selected_section === "masa") {
-      selected_section_str = "Masa";
-    } else if (selected_section === "bolge") {
-      selected_section_str = "Bölge";
-    }
+        <div className={styles.header_button} onClick={handleSilClick}>
+          <Icon name="trash alternate" />
+          {selected_section_str} Sil
+        </div>
+      </header>
 
-    return (
-      <div>
-        <Confirm
-          content="Emin misin?"
-          onConfirm={sil_fn}
-          open={this.state.confirm_dlg_open}
-          onCancel={this.close_dialog}
-          cancelButton="İptal"
-          confirmButton="Tamam"
-        />
-        <BolgeModal
-          open={modalOpen}
-          header="Masa Ekle"
-          close_fn={this.handleModalClose}
-          kaydet_fn={this.bolge_ekle}
-        />
-        <header className={styles.header}>
-          <div className={styles.header_logo}>
-            <Icon size="large" name="chess board" />
-            <b> Bölge/Masa</b>
-          </div>
-          <b></b>
-          <b></b>
-          <div className={styles.header_button}>
-            <Icon name="edit" />
-            {selected_section_str} Güncelle
-          </div>
-          <div className={styles.header_button} onClick={this.handleModalOpen}>
-            <Icon name="plus" />
-            {selected_section_str} ekle
-          </div>
-
-          <div className={styles.header_button} onClick={this.handleSilClick}>
-            <Icon name="trash alternate" />
-            {selected_section_str} Sil
-          </div>
-        </header>
-
-        <section
-          id="bolge"
-          className={classNames({
-            [styles.bolge]: true,
-            [styles.selected_section]: selected_section === "bolge",
-          })}
-          onClick={this.handleSectionClick}
-        >
-          {bolgeler.map((bolge) => (
+      <section
+        id="bolge"
+        className={classNames({
+          [styles.bolge]: true,
+          [styles.selected_section]: selected_section === "bolge",
+        })}
+        onClick={handleSectionClick}
+      >
+        {Array.isArray(bolgeler) &&
+          bolgeler.map((bolge) => (
             <div
               key={bolge.bolge}
               className={classNames({
                 [styles.selected]: secilen_bolge_elem === bolge.bolge,
                 [styles.selected_section]: secilen_elemen === bolge.bolge,
               })}
-              onClick={this.handleBolgeClick}
+              onClick={handleBolgeClick}
             >
               {bolge.bolge}
             </div>
           ))}
-        </section>
-        <section
-          id="masa"
-          className={classNames({
-            [styles.masa]: true,
-            [styles.selected_section]: selected_section === "masa",
-          })}
-          onClick={this.handleSectionClick}
-        >
-          {masalar
+      </section>
+      <section
+        id="masa"
+        className={classNames({
+          [styles.masa]: true,
+          [styles.selected_section]: selected_section === "masa",
+        })}
+        onClick={handleSectionClick}
+      >
+        {Array.isArray(masalar) &&
+          masalar
             .filter((masa) => masa.bolge === secilen_bolge_elem)
             .map((masa) => (
-              <div key={masa.bolge} onClick={this.handleMasaClick}>
+              <div key={masa.bolge} onClick={handleMasaClick}>
                 {masa.ad}
               </div>
             ))}
-        </section>
-      </div>
-    );
-  }
+      </section>
+    </div>
+  );
 }
 
-const mapStateToProps = (state) => ({
-  masalar: masa_reducer.getMasa(state.static_data.masa),
-  bolgeler: bolge_reducer.getBolge(state.static_data.bolge),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  static_actions: bindActionCreators(static_actions, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Meslic);
+export default Meslic;

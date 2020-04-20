@@ -1,5 +1,40 @@
-import { getData, postData, DelData } from "../utils/fetch_utils";
-import * as types from "../constants/actionTypes";
+import { push } from "connected-react-router";
+import * as types from "./actionTypes";
+import * as MSG from "../utils/msg";
+import { postData, getData, DelData } from "../utils/fetch_utils";
+
+export const login = (data) => async (dispatch, getState) => {
+  dispatch({ type: types.USER_AUTH_BEGIN });
+  try {
+    const response = await postData("api/rpc/login", data);
+
+    if (!response.ok) {
+      return dispatch({
+        type: types.USER_AUTH_FAIL,
+        error: true,
+        msg: response.statusText || MSG.FAIL_MSG,
+      });
+    }
+    const result = await response.json();
+    localStorage.removeItem("jeton");
+    localStorage.setItem("jeton", result[0].token);
+    dispatch(push("/dashboard"));
+
+    return dispatch({
+      type: types.USER_AUTH_SUCCESS,
+      error: false,
+      msg: MSG.SUCCESS_MSG,
+      isAuthenticated: true,
+      userName: data.uye.split("@", 2)[0],
+      firma: data.uye.split("@", 2)[1],
+    });
+  } catch (error) {
+    return {
+      error: true,
+      msg: error,
+    };
+  }
+};
 
 export const bolgeEkle = (data) => async (dispatch, getState) => {
   dispatch({ type: types.INS_BOLGE_BEGIN });

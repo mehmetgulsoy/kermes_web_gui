@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import {
   Button,
   Form,
@@ -9,43 +9,39 @@ import {
   Segment,
   Icon,
 } from "semantic-ui-react";
-import * as auth from "../../actions/auth";
-import * as msg from "../../constants/msg"; 
+import * as auth from "../../state/actions";
+import * as msg from "../../utils/msg";
 import styles from "./login.module.css";
 
-export default function LoginForm(props) 
-{
+export default function LoginForm(props) {
   const [uye, set_uye] = useState("Mehmet@BTY");
   const [sifre, set_sifre] = useState("31414819674");
   const [formErrors, set_formErrors] = useState({});
-  const [isLoading, set_isLoading] = useState(false);  
-  const [error, set_error]      =useState(false);
-  const dispatch =  useDispatch()
-  
-  const handleSubmit = () => {    
+  const [isLoading, set_isLoading] = useState(false);
+  const [error, set_error] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     let errors = {};
     set_error("");
-    set_isLoading(true)
+    set_isLoading(true);
     if (!uye) errors.uye = msg.REQUIRED_FIELD_MSG;
     else if (!uye.includes("@")) errors.uye = msg.UYE_FIELD_MSG;
-
     if (!sifre) errors.sifre = msg.REQUIRED_FIELD_MSG;
-
     set_formErrors({ formErrors: errors });
 
-    if (Object.entries(errors).length !== 0) {       
-      set_isLoading(false)
-      return;
-    }        
-    dispatch(auth.login({ uye, sifre }))
-    .then((res) => {
+    if (Object.entries(errors).length !== 0) {
       set_isLoading(false);
-      if (res.error === true){
-        set_error(res.msg);       
-      }      
-    });
-  };     
-     
+      return;
+    }
+    const result = await dispatch(auth.login({ uye, sifre }));
+    set_isLoading(false);
+    if (result.error === true) {
+      set_error(result.msg);
+    }
+  };
+
   return (
     <div className={styles.loginForm}>
       <Header as="h2">
@@ -53,11 +49,7 @@ export default function LoginForm(props)
       </Header>
       <Form error={error.length > 0} onSubmit={handleSubmit}>
         <Segment stacked>
-          <Message
-            error
-            header="Hata Oluştu!"
-            content={error}         
-          />
+          <Message error header="Hata Oluştu!" content={error} />
           <Form.Input
             fluid
             required
@@ -68,7 +60,7 @@ export default function LoginForm(props)
             name="uye"
             value={uye}
             error={formErrors.uye}
-            onChange={e=>set_uye(e.target.value)}
+            onChange={(e) => set_uye(e.target.value)}
           />
           <Form.Input
             fluid
@@ -80,14 +72,9 @@ export default function LoginForm(props)
             name="sifre"
             value={sifre}
             error={formErrors.sifre}
-            onChange={e=>set_sifre(e.target.value)}
+            onChange={(e) => set_sifre(e.target.value)}
           />
-          <Button
-            primary
-            fluid
-            size="large"       
-            loading={isLoading}
-          >
+          <Button primary fluid size="large" loading={isLoading}>
             Giriş
           </Button>
         </Segment>

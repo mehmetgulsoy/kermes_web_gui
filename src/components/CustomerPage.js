@@ -15,16 +15,16 @@ class CustomerPage extends Component {
     {
       path: this.props.match.path + "/Anasayfa",
       exact: true,
-      component: Anasayfa
+      component: Anasayfa,
     },
     {
       path: this.props.match.path + "/Siparis",
-      component: Siparis
+      component: Siparis,
     },
     {
       path: this.props.match.path + "/Yorumlar",
-      component: Yorumlar
-    }
+      component: Yorumlar,
+    },
   ];
 
   handleItemClick = (e, { name }) => {
@@ -99,11 +99,11 @@ class CustomerPage extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = (state) => ({});
 
-const mapDispatchToProps = dispatch => ({
-  push: path => dispatch(push(path)),
-  replace: path => dispatch(replace(path))
+const mapDispatchToProps = (dispatch) => ({
+  push: (path) => dispatch(push(path)),
+  replace: (path) => dispatch(replace(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerPage);
