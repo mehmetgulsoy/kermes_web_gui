@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   Button,
   Form,
@@ -20,6 +20,7 @@ export default function LoginForm(props) {
   const [isLoading, set_isLoading] = useState(false);
   const [error, set_error] = useState(false);
   const dispatch = useDispatch();
+  let history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,10 +37,10 @@ export default function LoginForm(props) {
       return;
     }
     const result = await dispatch(auth.login({ uye, sifre }));
-    set_isLoading(false);
     if (result.error === true) {
       set_error(result.msg);
-    }
+      set_isLoading(false);
+    } else history.push("/dashboard");
   };
 
   return (

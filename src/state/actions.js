@@ -7,18 +7,18 @@ export const login = (data) => async (dispatch, getState) => {
   dispatch({ type: types.USER_AUTH_BEGIN });
   try {
     const response = await postData("api/rpc/login", data);
+    const result = await response.json();
 
     if (!response.ok) {
       return dispatch({
         type: types.USER_AUTH_FAIL,
         error: true,
-        msg: response.statusText || MSG.FAIL_MSG,
+        msg: result.message || MSG.FAIL_MSG,
       });
     }
-    const result = await response.json();
+
     localStorage.removeItem("jeton");
     localStorage.setItem("jeton", result[0].token);
-    dispatch(push("/dashboard"));
 
     return dispatch({
       type: types.USER_AUTH_SUCCESS,
@@ -31,7 +31,7 @@ export const login = (data) => async (dispatch, getState) => {
   } catch (error) {
     return {
       error: true,
-      msg: error,
+      message: error,
     };
   }
 };

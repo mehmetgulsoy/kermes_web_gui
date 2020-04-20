@@ -1,94 +1,10 @@
-import React, { Component, useState } from "react";
-import { useSelector } from "react-redux";
-import {
-  Icon,
-  Button,
-  Modal,
-  Form,
-  Confirm,
-  Dropdown,
-} from "semantic-ui-react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Icon, Confirm } from "semantic-ui-react";
+import { BolgeModal } from "./BolgeModal";
 import styles from "./style.module.css";
 import classNames from "classnames";
-// import * as masa_reducer from "../../reducers/masa";
-// import * as bolge_reducer from "../../reducers/bolge";
-// import * as static_actions from "../../actions/static_data";
-
-let garsonlar = [];
-
-class BolgeModal extends Component {
-  state = {
-    bolge_adi: "",
-  };
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
-
-  handleSubmit = () => console.log(this.state);
-
-  render() {
-    const { open, header, close_fn, kaydet_fn } = this.props;
-    const { bolge_adi, garson, masa_adeti } = this.state;
-
-    return (
-      <Modal open={open} size="tiny" closeOnEscape={true} onClose={close_fn}>
-        <Modal.Header>{header}</Modal.Header>
-        <Modal.Content>
-          <Modal.Description>
-            <Form>
-              <Form.Field>
-                <Form.Input
-                  required
-                  label="Bölge Adı"
-                  placeholder="Bölge Adı..."
-                  onChange={this.handleChange}
-                  name="bolge_adi"
-                  value={bolge_adi}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Garson</label>
-                <Dropdown
-                  label="Garson"
-                  placeholder="Garson Seçiniz..."
-                  name="garson"
-                  multiple
-                  search
-                  selection
-                  noResultsMessage="Kayıt bulunamadı"
-                  onChange={this.handleChange}
-                  options={garsonlar}
-                />
-              </Form.Field>
-              <Form.Field>
-                <Form.Input
-                  required
-                  type="number"
-                  label="Masa Adeti"
-                  placeholder="Masa Adeti..."
-                  onChange={this.handleChange}
-                  name="masa_adeti"
-                  value={parseInt(masa_adeti)}
-                />
-              </Form.Field>
-            </Form>
-          </Modal.Description>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button onClick={close_fn} color="red">
-            Kapat
-          </Button>
-          <Button
-            positive
-            icon="checkmark"
-            labelPosition="right"
-            content="Kaydet"
-            disabled={bolge_adi === ""}
-            onClick={() => kaydet_fn({ bolge: bolge_adi, garson })}
-          />
-        </Modal.Actions>
-      </Modal>
-    );
-  }
-}
+import * as actions from "../../state/actions";
 
 function Meslic(props) {
   const [secilen_elemen, set_secilen_elemen] = useState(""); // aktif masa veya bölge
@@ -99,11 +15,12 @@ function Meslic(props) {
   const [modalOpen, set_modalOpen] = useState(false);
   const masalar = useSelector((state) => state.static_data.masa);
   const bolgeler = useSelector((state) => state.static_data.bolge);
+  const dispatch = useDispatch();
 
-  // componentDidMount() {
-  //   this.props.static_actions.masaGetir();
-  //   this.props.static_actions.bolgeGetir();
-  // }
+  useEffect(() => {
+    dispatch(actions.masaGetir());
+    dispatch(actions.bolgeGetir());
+  }, [dispatch]);
 
   const open_dialog = () => set_confirm_dlg_open(true);
   const close_dialog = () => set_confirm_dlg_open(false);
@@ -163,6 +80,7 @@ function Meslic(props) {
         confirmButton="Tamam"
       />
       <BolgeModal
+        garsonlar={[]}
         open={modalOpen}
         header="Masa Ekle"
         close_fn={handleModalClose}
