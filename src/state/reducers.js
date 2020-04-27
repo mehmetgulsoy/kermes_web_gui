@@ -6,7 +6,8 @@ const rootReducer = (history) =>
   combineReducers({
     router: connectRouter(history),
     auth,
-    static_data: combineReducers({
+    ui,
+    entities: combineReducers({
       masa,
       bolge,
       urun,
@@ -14,19 +15,18 @@ const rootReducer = (history) =>
   });
 export default rootReducer;
 
-const auth_initialState = {
+const auth_init = {
   isAuthenticated: false,
   userName: "",
   firma: "",
-  error: false,
-  msg: "",
 };
 
-function auth(state = auth_initialState, action) {
+function auth(state = auth_init, action) {
   switch (action.type) {
+    case types.USER_AUTH_FAIL:
     case types.USER_AUTH_BEGIN:
       return {
-        ...auth_initialState,
+        ...auth_init,
       };
     case types.USER_AUTH_SUCCESS:
       return {
@@ -34,23 +34,52 @@ function auth(state = auth_initialState, action) {
         userName: action.userName,
         firma: action.firma,
       };
-    case types.USER_AUTH_FAIL:
+    default:
+      return state;
+  }
+}
+
+const ui_init = {
+  is_loading: false,
+  error: false,
+  msg: "",
+};
+
+function ui(state = ui_init, action) {
+  switch (action.type) {
+    case types.FETCH_BEGIN:
       return {
-        ...auth_initialState,
-        error: true,
+        ...state,
+        is_loading: true,
+      };
+    case types.FETCH_END:
+      return {
+        ...state,
+        is_loading: false,
+      };
+    case types.DISPLAY_MSG:
+      return {
+        ...state,
+        error: action.error,
         msg: action.msg,
+      };
+    case types.CLEAR_MSG:
+      return {
+        ...state,
+        error: false,
+        msg: "",
       };
     default:
       return state;
   }
 }
 
-const bolge_initialState = {
+const bolge_init = {
   bolge: [],
   son_trh: "",
 };
 
-function bolge(state = bolge_initialState, action) {
+function bolge(state = bolge_init, action) {
   switch (action.type) {
     case types.FETCH_BOLGE_SUCCESS:
       return {

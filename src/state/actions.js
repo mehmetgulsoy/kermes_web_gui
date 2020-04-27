@@ -3,36 +3,36 @@ import * as types from "./actionTypes";
 import * as MSG from "../utils/msg";
 import { postData, getData, DelData } from "../utils/fetch_utils";
 
+const fetch_begin = () => ({ type: types.FETCH_BEGIN });
+const fetch_end = () => ({ type: types.FETCH_END });
+const clear_msg = () => ({ type: types.CLEAR_MSG });
+const display_msg = (msg, error) => ({ type: types.DISPLAY_MSG, msg, error });
+
 export const login = (data) => async (dispatch, getState) => {
-  dispatch({ type: types.USER_AUTH_BEGIN });
+  dispatch(fetch_begin());
+  dispatch(clear_msg());
   try {
     const response = await postData("api/rpc/login", data);
     const result = await response.json();
+    dispatch(fetch_end());
 
     if (!response.ok) {
-      return dispatch({
-        type: types.USER_AUTH_FAIL,
-        error: true,
-        msg: result.message || MSG.FAIL_MSG,
+      dispatch({ type: types.USER_AUTH_FAIL });
+      dispatch(display_msg(result.message, true));
+    } else {
+      localStorage.removeItem("jeton");
+      localStorage.setItem("jeton", result[0].token);
+      dispatch({
+        type: types.USER_AUTH_SUCCESS,
+        isAuthenticated: true,
+        userName: data.uye.split("@", 2)[0],
+        firma: data.uye.split("@", 2)[1],
       });
+      dispatch(push("/dashboard"));
     }
-
-    localStorage.removeItem("jeton");
-    localStorage.setItem("jeton", result[0].token);
-
-    return dispatch({
-      type: types.USER_AUTH_SUCCESS,
-      error: false,
-      msg: MSG.SUCCESS_MSG,
-      isAuthenticated: true,
-      userName: data.uye.split("@", 2)[0],
-      firma: data.uye.split("@", 2)[1],
-    });
   } catch (error) {
-    return {
-      error: true,
-      message: error,
-    };
+    dispatch(fetch_end());
+    dispatch(display_msg(error.message, true));
   }
 };
 
