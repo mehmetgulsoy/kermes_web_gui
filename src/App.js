@@ -32,4 +32,5 @@ const App = ({ history }) => (
     </div>
   </ConnectedRouter>
 );
+
 export default App;

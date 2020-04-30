@@ -1,38 +1,31 @@
 import { push } from "connected-react-router";
 import * as types from "./actionTypes";
-import * as MSG from "../utils/msg";
 import { postData, getData, DelData } from "../utils/fetch_utils";
-
-const fetch_begin = () => ({ type: types.FETCH_BEGIN });
-const fetch_end = () => ({ type: types.FETCH_END });
-const clear_msg = () => ({ type: types.CLEAR_MSG });
-const display_msg = (msg, error) => ({ type: types.DISPLAY_MSG, msg, error });
+import { auth_slice } from "./auth_slice";
+import { ui_slice } from "./ui_slice";
+import { masa_slice } from "./masa_slice";
+import { bolge_slice as blg } from "./bolge_slice";
 
 export const login = (data) => async (dispatch, getState) => {
-  dispatch(fetch_begin());
-  dispatch(clear_msg());
+  dispatch(ui_slice.actions.clear_msg());
+  dispatch(ui_slice.actions.loading_begin());
   try {
     const response = await postData("api/rpc/login", data);
     const result = await response.json();
-    dispatch(fetch_end());
+    dispatch(ui_slice.actions.loading_end());
 
     if (!response.ok) {
-      dispatch({ type: types.USER_AUTH_FAIL });
-      dispatch(display_msg(result.message, true));
+      dispatch(ui_slice.actions.display_msg(true, result.message));
     } else {
       localStorage.removeItem("jeton");
       localStorage.setItem("jeton", result[0].token);
-      dispatch({
-        type: types.USER_AUTH_SUCCESS,
-        isAuthenticated: true,
-        userName: data.uye.split("@", 2)[0],
-        firma: data.uye.split("@", 2)[1],
-      });
+      const [userName, firma] = data.uye.split("@", 2);
+      dispatch(auth_slice.actions.login(userName, firma));
       dispatch(push("/dashboard"));
     }
   } catch (error) {
-    dispatch(fetch_end());
-    dispatch(display_msg(error.message, true));
+    dispatch(ui_slice.actions.loading_end());
+    dispatch(ui_slice.actions.display_msg(true, error.message));
   }
 };
 
@@ -40,9 +33,7 @@ export const bolgeEkle = (data) => async (dispatch, getState) => {
   dispatch({ type: types.INS_BOLGE_BEGIN });
   const firma = getState().auth.firma;
   const veri = { firma, ...data };
-
   const response = await postData("api/bolge", veri);
-
   if (!response.ok) {
     dispatch({ type: types.INS_BOLGE_FAIL });
     throw new Error("Network operasyonu başarisiz. " + response.statusText);
@@ -55,20 +46,13 @@ export const bolgeEkle = (data) => async (dispatch, getState) => {
 };
 
 export const bolgeGetir = (data) => async (dispatch, getState) => {
-  dispatch({ type: types.FETCH_BOLGE_BEGIN });
   const response = await getData("api/bolge");
-
   if (!response.ok) {
     dispatch({ type: types.FETCH_BOLGE_FAIL });
     throw new Error("Network operasyonu başarisiz. " + response.statusText);
   }
-
   const result = await response.json();
-
-  dispatch({
-    type: types.FETCH_BOLGE_SUCCESS,
-    bolge: result,
-  });
+  dispatch(blg.actions.fetch(result));
 };
 
 export const bolgeGuncelle = (data) => async (dispatch, getState) => {
@@ -97,20 +81,13 @@ export const masaEkle = (data) => async (dispatch, getState) => {
 };
 
 export const masaGetir = () => async (dispatch, getState) => {
-  dispatch({ type: types.FETCH_MASA_BEGIN });
   const response = await getData("api/masa");
-
   if (!response.ok) {
     dispatch({ type: types.FETCH_MASA_FAIL });
     throw new Error("Network operasyonu başarisiz. " + response.statusText);
   }
-
   const result = await response.json();
-
-  dispatch({
-    type: types.FETCH_MASA_SUCCESS,
-    masa: result,
-  });
+  dispatch(masa_slice.actions.fetch(result));
 };
 
 export const masaSil = (data) => async (dispatch, getState) => {
@@ -126,7 +103,6 @@ export const urun_ekle = (data) => async (dispatch, getState) => {
 };
 
 export const urun_getir = () => async (dispatch, getState) => {
-  dispatch({ type: types.FETCH_URUN_BEGIN });
   const response = await getData(
     "api/urun?select=no,urun,aciklama,katagori,fiyat,miktar,gnc_trh"
   );

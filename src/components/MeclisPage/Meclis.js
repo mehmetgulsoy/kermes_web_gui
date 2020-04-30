@@ -5,6 +5,8 @@ import { BolgeModal } from "./BolgeModal";
 import styles from "./style.module.css";
 import classNames from "classnames";
 import * as actions from "../../state/actions";
+import { select_bolgeler } from "../../state/bolge_slice";
+import { select_masalar } from "../../state/masa_slice";
 
 function Meslic(props) {
   const [secilen_elemen, set_secilen_elemen] = useState(""); // aktif masa veya bölge
@@ -13,14 +15,16 @@ function Meslic(props) {
   const [confirm_dlg_open, set_confirm_dlg_open] = useState(false);
   const [sil_fn, set_sil_fn] = useState(null);
   const [modalOpen, set_modalOpen] = useState(false);
-  const masalar = useSelector((state) => state.static_data.masa);
-  const bolgeler = useSelector((state) => state.static_data.bolge);
+  const masalar = useSelector(select_masalar);
+  const bolgeler = useSelector(select_bolgeler);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(actions.masaGetir());
     dispatch(actions.bolgeGetir());
   }, [dispatch]);
+
+  console.log("form render");
 
   const open_dialog = () => set_confirm_dlg_open(true);
   const close_dialog = () => set_confirm_dlg_open(false);
@@ -119,7 +123,7 @@ function Meslic(props) {
         {Array.isArray(bolgeler) &&
           bolgeler.map((bolge) => (
             <div
-              key={bolge.bolge}
+              key={bolge.ad}
               className={classNames({
                 [styles.selected]: secilen_bolge_elem === bolge.bolge,
                 [styles.selected_section]: secilen_elemen === bolge.bolge,
@@ -142,7 +146,7 @@ function Meslic(props) {
           masalar
             .filter((masa) => masa.bolge === secilen_bolge_elem)
             .map((masa) => (
-              <div key={masa.bolge} onClick={handleMasaClick}>
+              <div key={masa.ad} onClick={handleMasaClick}>
                 {masa.ad}
               </div>
             ))}

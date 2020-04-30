@@ -46,7 +46,7 @@ export default function LoginForm(props) {
       </Header>
       <Form error={get_error()} onSubmit={handleSubmit}>
         <Segment stacked>
-          <Message error={false} header="Hata Oluştu!" content={get_msg()} />
+          <Message error={true} header="Hata Oluştu!" content={get_msg()} />
           <Form.Input
             fluid
             required
